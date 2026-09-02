@@ -1,0 +1,18 @@
+{
+  "name": "GYM PRO — برنامۀ تمرینی هوشمند",
+  "short_name": "GYM PRO",
+  "description": "برنامۀ تمرینی هفتگی با پرسشنامه و پیشنهاد برنامه — کاملاً آفلاین",
+  "id": "./",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "dir": "rtl",
+  "lang": "fa",
+  "background_color": "#070c0a",
+  "theme_color": "#0b120f",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icons/icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

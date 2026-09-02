@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b120f">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+<link rel="apple-touch-icon" href="icons/icon.svg">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GYM PRO">
+<title>GYM PRO — برنامه تمرینی هوشمند</title>
+<style>
+/* ========== متغیرهای تم تیره/سبز ========== */
+:root{
+  --bg:#070c0a; --bg2:#0a1210; --panel:#0e1712; --card:#122019; --card2:#16281f;
+  --line:#1e3529; --green:#22c55e; --green2:#4ade80; --lime:#a3e635;
+  --text:#e9f6ee; --muted:#8fb0a0; --danger:#f87171;
+  --radius:16px; --shadow:0 10px 30px rgba(0,0,0,.45); --glow:0 0 18px rgba(34,197,94,.25);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:system-ui,"Segoe UI",Tahoma,"Iranian Sans",sans-serif;
+  background:
+    radial-gradient(900px 400px at 85% -10%, rgba(34,197,94,.10), transparent 60%),
+    radial-gradient(700px 380px at 0% 15%, rgba(163,230,53,.05), transparent 55%),
+    var(--bg);
+  color:var(--text); min-height:100vh; line-height:1.8;
+}
+body.locked{overflow:hidden}
+::selection{background:rgba(34,197,94,.35)}
+
+/* ========== سربرگ ========== */
+header{position:sticky;top:0;z-index:50;background:rgba(7,12,10,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.hwrap{max-width:1100px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:46px;height:46px;border-radius:14px;flex:0 0 auto;background:linear-gradient(135deg,var(--green),#0f7a3d);display:grid;place-items:center;box-shadow:var(--glow)}
+.logo svg{width:26px;height:26px;fill:#04150b}
+.brand h1{font-size:1.25rem;letter-spacing:.5px;line-height:1.3}
+.brand h1 span{color:var(--green2)}
+.brand small{display:block;color:var(--muted);font-size:.72rem;font-weight:400}
+.hmeta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:.78rem;color:var(--muted)}
+.chip b{color:var(--green2)}
+.btn{cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--text);padding:8px 16px;border-radius:12px;font-size:.82rem;font-family:inherit;transition:.2s;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--green);box-shadow:var(--glow)}
+.btn.primary{background:linear-gradient(135deg,var(--green),#0f7a3d);border-color:transparent;color:#04150b;font-weight:700}
+.btn.primary:hover{filter:brightness(1.1)}
+.btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+
+/* ========== بدنه ========== */
+main{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
+.section-title{display:flex;align-items:center;gap:10px;font-size:1rem;color:var(--green2);margin:34px 0 14px}
+.section-title::before{content:"";width:4px;height:20px;border-radius:4px;background:linear-gradient(180deg,var(--green),var(--lime))}
+.section-title small{color:var(--muted);font-weight:400;font-size:.75rem}
+
+/* ========== کارت‌های اطلاعات بدنی ========== */
+.stats{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(155px,1fr))}
+.stat{background:linear-gradient(160deg,var(--card),var(--panel));border:1px solid var(--line);border-radius:var(--radius);padding:16px;position:relative;overflow:hidden;transition:.25s}
+.stat:hover{transform:translateY(-3px);border-color:rgba(34,197,94,.5);box-shadow:var(--shadow)}
+.stat::after{content:"";position:absolute;inset:auto -20px -30px auto;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,rgba(34,197,94,.14),transparent 70%)}
+.stat .ico{width:38px;height:38px;border-radius:11px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);display:grid;place-items:center;margin-bottom:10px}
+.stat .ico svg{width:20px;height:20px;stroke:var(--green2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.stat .lbl{font-size:.74rem;color:var(--muted)}
+.stat .val{font-size:1.45rem;font-weight:800;color:var(--text);line-height:1.4}
+.stat .val u{font-size:.72rem;color:var(--muted);text-decoration:none;font-weight:400;margin-inline-start:3px}
+.stat .sub{font-size:.7rem;color:var(--green2)}
+.stat .sub.warn{color:#fbbf24}
+.stat .sub.bad{color:var(--danger)}
+
+/* فرم ویرایش بدن */
+#bodyForm{display:none;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-top:14px}
+#bodyForm.open{display:block}
+#bodyForm .fields{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+#bodyForm label{font-size:.75rem;color:var(--muted);display:block;margin-bottom:4px}
+#bodyForm input{width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px;color:var(--text);padding:9px 12px;font-family:inherit;font-size:.9rem}
+#bodyForm input:focus{outline:none;border-color:var(--green)}
+#bodyForm .actions{margin-top:14px;display:flex;gap:8px}
+
+/* ========== تب‌های روزهای هفته ========== */
+.days{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.day-tab{flex:0 0 auto;cursor:pointer;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 16px;text-align:center;color:var(--muted);font-family:inherit;font-size:.82rem;transition:.2s;position:relative}
+.day-tab b{display:block;color:var(--text);font-size:.88rem}
+.day-tab .dot{position:absolute;top:6px;left:6px;width:8px;height:8px;border-radius:50%;background:var(--line);transition:.2s}
+.day-tab .dot.full{background:var(--green);box-shadow:0 0 8px var(--green)}
+.day-tab .dot.part{background:#fbbf24}
+.day-tab:hover{border-color:rgba(34,197,94,.4)}
+.day-tab.active{background:linear-gradient(160deg,rgba(34,197,94,.16),var(--panel));border-color:var(--green);color:var(--green2);box-shadow:var(--glow)}
+.day-tab.active b{color:var(--green2)}
+.day-tab.today::after{content:"امروز";position:absolute;bottom:-9px;right:50%;transform:translateX(50%);background:var(--lime);color:#12220a;font-size:.6rem;font-weight:800;padding:1px 8px;border-radius:999px}
+
+/* ========== پنل تمرین روز ========== */
+.day-panel{margin-top:18px;background:linear-gradient(170deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:var(--shadow)}
+.day-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.day-head h2{font-size:1.15rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.day-head h2 .badge{font-size:.68rem;background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.35);color:var(--green2);border-radius:999px;padding:2px 12px;font-weight:400}
+.day-head .goal{font-size:.75rem;color:var(--muted)}
+
+/* نوار پیشرفت */
+.progress-wrap{margin:18px 0 6px}
+.progress-meta{display:flex;justify-content:space-between;font-size:.76rem;color:var(--muted);margin-bottom:7px}
+.progress-meta b{color:var(--green2);font-size:.9rem}
+.bar{height:14px;background:#0a130e;border:1px solid var(--line);border-radius:999px;overflow:hidden;position:relative}
+.bar i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#0f7a3d,var(--green) 55%,var(--lime));box-shadow:0 0 12px rgba(34,197,94,.55);transition:width .5s cubic-bezier(.2,.8,.2,1);position:relative}
+.bar i::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.25) 50%,transparent 70%);animation:shine 2.4s infinite}
+@keyframes shine{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+
+/* لیست حرکت‌ها */
+.ex-list{margin-top:14px;display:grid;gap:10px}
+.ex{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 16px;cursor:pointer;transition:.2s;user-select:none}
+.ex:hover{border-color:rgba(34,197,94,.45);transform:translateX(-3px)}
+.ex .chk{width:24px;height:24px;flex:0 0 auto;border-radius:8px;border:2px solid var(--line);display:grid;place-items:center;transition:.2s;background:var(--bg2)}
+.ex .chk svg{width:14px;height:14px;stroke:#04150b;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0;transform:scale(.4);transition:.2s}
+.ex.done .chk{background:var(--green);border-color:var(--green)}
+.ex.done .chk svg{opacity:1;transform:scale(1)}
+.ex .num{width:28px;height:28px;flex:0 0 auto;border-radius:9px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:var(--green2);display:grid;place-items:center;font-size:.75rem;font-weight:700}
+.ex .info{flex:1;min-width:0}
+.ex .info b{display:block;font-size:.92rem}
+.ex .info small{color:var(--muted);font-size:.72rem}
+.ex .spec{flex:0 0 auto;text-align:center;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:5px 12px;font-size:.78rem;color:var(--green2);font-weight:700;white-space:nowrap}
+.ex .spec small{display:block;color:var(--muted);font-size:.62rem;font-weight:400}
+.ex.done{opacity:.62}
+.ex.done .info b{text-decoration:line-through;text-decoration-color:rgba(74,222,128,.7)}
+
+/* روز استراحت */
+.rest{text-align:center;padding:34px 16px;color:var(--muted)}
+.rest .big{font-size:2.4rem;margin-bottom:8px}
+.rest b{color:var(--green2);font-size:1rem}
+
+/* ========== پیشرفت هفتگی ========== */
+.week-grid{display:grid;gap:14px;grid-template-columns:1fr 1fr;align-items:stretch}
+.week-card{background:linear-gradient(160deg,var(--card),var(--panel));border:1px solid var(--line);border-radius:var(--radius);padding:18px;display:flex;align-items:center;gap:18px}
+.week-card .txt h3{font-size:.95rem;margin-bottom:4px}
+.week-card .txt p{font-size:.75rem;color:var(--muted)}
+.ring{position:relative;width:92px;height:92px;flex:0 0 auto}
+.ring svg{width:92px;height:92px;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:9;stroke-linecap:round}
+.ring .bgc{stroke:#0a130e}
+.ring .fgc{stroke:url(#gradRing);transition:stroke-dashoffset .6s cubic-bezier(.2,.8,.2,1)}
+.ring .pct{position:absolute;inset:0;display:grid;place-items:center;font-size:1.05rem;font-weight:800;color:var(--green2)}
+.mini-bars{display:grid;gap:9px;flex:1}
+.mb{display:flex;align-items:center;gap:10px;font-size:.72rem;color:var(--muted)}
+.mb .nm{width:64px;flex:0 0 auto}
+.mb .bar{flex:1;height:9px}
+.mb .pv{width:34px;text-align:left;flex:0 0 auto;color:var(--green2);font-weight:700}
+/* ========== تایمر استراحت (داک پایین) ========== */
+#restDock{position:fixed;bottom:18px;left:50%;transform:translate(-50%,180px);z-index:110;
+  display:flex;align-items:center;gap:14px;padding:12px 18px;border-radius:20px;
+  background:rgba(14,23,18,.94);backdrop-filter:blur(14px);border:1px solid rgba(34,197,94,.45);
+  box-shadow:0 14px 40px rgba(0,0,0,.6),var(--glow);max-width:94vw;
+  transition:transform .45s cubic-bezier(.2,.9,.25,1.15)}
+#restDock.show{transform:translate(-50%,0)}
+.rd-ring{position:relative;width:64px;height:64px;flex:0 0 auto}
+.rd-ring svg{width:64px;height:64px;transform:rotate(-90deg)}
+.rd-ring circle{fill:none;stroke-width:6;stroke-linecap:round}
+.rd-ring .rbg{stroke:#0a130e}
+.rd-ring .rfg{stroke:url(#gradRest);transition:stroke-dashoffset .25s linear}
+.rd-ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:.92rem;color:var(--green2);font-variant-numeric:tabular-nums}
+.rd-info{min-width:0}
+.rd-info small{display:block;font-size:.62rem;color:var(--muted)}
+.rd-lbl{display:block;font-size:.8rem;font-weight:700;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rd-btns{display:flex;gap:6px}
+.rd-btns button{cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:10px;padding:6px 11px;font-size:.78rem;font-family:inherit;transition:.2s}
+.rd-btns button:hover{border-color:var(--green);box-shadow:var(--glow)}
+.rd-btns .rd-skip{background:linear-gradient(135deg,var(--green),#0f7a3d);color:#04150b;font-weight:700;border-color:transparent}
+#restDock.done .rd-ring{animation:pulse .55s 3}
+@keyframes pulse{50%{transform:scale(1.14)}}
+.ex .ex-t{flex:0 0 auto;width:34px;height:34px;border-radius:10px;border:1px solid var(--line);
+  background:var(--bg2);color:var(--green2);display:grid;place-items:center;font-size:.95rem;cursor:pointer;transition:.2s;font-family:inherit}
+.ex .ex-t:hover{border-color:var(--green);box-shadow:var(--glow)}
+
+/* ========== نقشه حرارتی عضلات ========== */
+.mus-wrap{background:linear-gradient(160deg,var(--card),var(--panel));border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow)}
+.mus-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.mus-legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.7rem;color:var(--muted)}
+.mus-legend i{width:10px;height:10px;border-radius:50%;display:inline-block;margin-inline-end:4px;vertical-align:middle}
+.mus-sum{display:flex;gap:8px;flex-wrap:wrap}
+.mus-sum span{font-size:.7rem;border:1px solid var(--line);border-radius:999px;padding:2px 10px;color:var(--muted)}
+.mus-figs{display:flex;justify-content:center;gap:10px}
+.mus-figs svg{width:min(46%,230px);height:auto}
+.mus .sil{fill:#0d1a14;stroke:var(--line);stroke-width:1}
+.mus [data-m]{stroke:#071009;stroke-width:1;cursor:pointer;transition:fill .45s,opacity .45s}
+.mus [data-m]:hover{stroke:var(--lime);stroke-width:1.6}
+.mus .sk{fill:none;stroke:#16281f;stroke-width:1.4;pointer-events:none}
+.mus-label{fill:var(--muted);font-size:11px;text-anchor:middle}
+#musInfo{margin-top:10px;text-align:center;font-size:.8rem;color:var(--muted);min-height:24px}
+#musInfo b{color:var(--green2)}
+@media (max-width:720px){
+  #restDock{left:12px;right:12px;bottom:12px;transform:translateY(180px)}
+  #restDock.show{transform:none}
+  .rd-lbl{max-width:32vw}
+  .mus-figs svg{width:min(48%,180px)}
+}
+
+
+/* ========== ویزارد (پرسشنامه + انتخاب برنامه) ========== */
+#wizard{position:fixed;inset:0;z-index:100;display:none;background:rgba(4,8,6,.82);backdrop-filter:blur(8px);overflow-y:auto;padding:24px 14px}
+#wizard.open{display:block}
+.wz{max-width:660px;margin:24px auto;background:linear-gradient(170deg,var(--panel),var(--bg2));border:1px solid rgba(34,197,94,.3);border-radius:22px;padding:26px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.wz-head{text-align:center;margin-bottom:6px}
+.wz-head .logo{margin:0 auto 10px}
+.wz-head h2{font-size:1.15rem}
+.wz-head p{color:var(--muted);font-size:.78rem}
+.wz-dots{display:flex;justify-content:center;gap:8px;margin:16px 0 22px}
+.wz-dots i{width:34px;height:5px;border-radius:99px;background:var(--line);transition:.3s}
+.wz-dots i.on{background:linear-gradient(90deg,var(--green),var(--lime));box-shadow:0 0 8px rgba(34,197,94,.5)}
+.wz-step{display:none}
+.wz-step.on{display:block;animation:fadein .3s}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.q{font-size:.85rem;color:var(--muted);margin:16px 0 8px}
+.q:first-child{margin-top:0}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button{flex:1;min-width:90px;cursor:pointer;background:var(--card);border:1.5px solid var(--line);border-radius:12px;color:var(--text);font-family:inherit;font-size:.85rem;padding:11px 8px;transition:.2s}
+.seg button:hover{border-color:rgba(34,197,94,.5)}
+.seg button.sel{border-color:var(--green);background:rgba(34,197,94,.14);color:var(--green2);font-weight:700;box-shadow:var(--glow)}
+.seg button small{display:block;color:var(--muted);font-size:.65rem;font-weight:400}
+.seg button.sel small{color:var(--green2)}
+.seg-days button{min-width:calc(25% - 6px);font-size:.8rem;padding:9px 4px}
+.wz .fields{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));margin-top:6px}
+.wz .fields label{font-size:.73rem;color:var(--muted);display:block;margin-bottom:4px}
+.wz .fields input{width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px;color:var(--text);padding:10px 12px;font-family:inherit;font-size:.95rem}
+.wz .fields input:focus{outline:none;border-color:var(--green)}
+.wz-err{color:var(--danger);font-size:.75rem;min-height:20px;margin-top:8px}
+.wz-nav{display:flex;justify-content:space-between;gap:10px;margin-top:20px}
+
+/* کارت‌های برنامه پیشنهادی */
+.plans{display:grid;gap:14px;margin-top:6px}
+.plan{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:16px;position:relative;transition:.2s}
+.plan:hover{border-color:rgba(34,197,94,.55);transform:translateY(-2px)}
+.plan.best{border-color:var(--green);box-shadow:var(--glow)}
+.plan .star{position:absolute;top:-11px;left:14px;background:linear-gradient(135deg,var(--lime),var(--green));color:#12220a;font-size:.66rem;font-weight:800;padding:2px 12px;border-radius:999px}
+.plan .p-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.plan h3{font-size:1rem;color:var(--green2)}
+.plan .tag{font-size:.72rem;color:var(--muted)}
+.plan .fit{text-align:center;flex:0 0 auto}
+.plan .fit b{display:block;font-size:1.25rem;color:var(--lime);line-height:1.3}
+.plan .fit span{font-size:.62rem;color:var(--muted)}
+.plan .sched{display:flex;gap:5px;flex-wrap:wrap;margin:10px 0}
+.plan .sched i{font-style:normal;font-size:.64rem;background:var(--bg2);border:1px solid var(--line);border-radius:7px;padding:2px 8px;color:var(--muted)}
+.plan .sched i.tr{color:var(--green2);border-color:rgba(34,197,94,.35)}
+.plan .why{font-size:.74rem;color:var(--muted);margin-bottom:12px}
+.plan .btn{width:100%;justify-content:center}
+
+/* ========== پیام (Toast) ========== */
+#toast{position:fixed;bottom:24px;right:50%;transform:translate(50%,80px);background:linear-gradient(135deg,var(--green),#0f7a3d);color:#04150b;font-weight:800;font-size:.88rem;padding:12px 26px;border-radius:999px;box-shadow:0 10px 30px rgba(34,197,94,.4);opacity:0;transition:.35s;z-index:120;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
+#toast.show{transform:translate(50%,0);opacity:1}
+
+/* ========== پاورقی ========== */
+footer{border-top:1px solid var(--line);padding:22px;text-align:center;color:var(--muted);font-size:.75rem}
+footer b{color:var(--green2)}
+
+/* ========== ریسپانسیو ========== */
+@media (max-width:720px){
+  .hwrap{justify-content:center;text-align:center}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .week-grid{grid-template-columns:1fr}
+  .day-panel{padding:16px;border-radius:16px}
+  .ex{gap:9px;padding:11px 12px}
+  .ex .num{display:none}
+  .ex .spec{padding:4px 9px;font-size:.72rem}
+  .ex .info b{font-size:.85rem}
+  .stat .val{font-size:1.2rem}
+  main{padding:18px 14px 50px}
+  .wz{padding:18px 14px;margin:8px auto}
+  .seg button{min-width:calc(50% - 4px)}
+}
+@media (max-width:380px){
+  .stats{grid-template-columns:1fr 1fr}
+  .ex .spec small{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= سربرگ ================= -->
+<header>
+  <div class="hwrap">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M20.5 10.5h-1.2V7.8c0-1-.8-1.8-1.8-1.8h-1.3V4.2c0-.7-.5-1.2-1.2-1.2s-1.2.5-1.2 1.2v1.3h-1.6V4.2c0-.7-.5-1.2-1.2-1.2S9.8 3.5 9.8 4.2v1.3H8.5c-1 0-1.8.8-1.8 1.8v2.7H5.5c-.8 0-1.5.7-1.5 1.5v2.4c0 .8.7 1.5 1.5 1.5h1.2v2.7c0 1 .8 1.8 1.8 1.8h1.3v1.3c0 .7.5 1.2 1.2 1.2s1.2-.5 1.2-1.2v-1.3h1.6v1.3c0 .7.5 1.2 1.2 1.2s1.2-.5 1.2-1.2v-1.3h1.3c1 0 1.8-.8 1.8-1.8v-2.7h1.2c.8 0 1.5-.7 1.5-1.5V12c0-.8-.7-1.5-1.5-1.5zM7.2 13.9v-3.8h1v3.8h-1zm9.6-3.8v3.8h-1v-3.8h1z"/></svg>
+      </div>
+      <h1>GYM <span>PRO</span><small>برنامه تمرینی هوشمند · آفلاین</small></h1>
+    </div>
+    <div class="hmeta">
+      <span class="chip" id="todayChip">…</span>
+      <span class="chip" id="progChip" style="display:none"></span>
+      <button class="btn primary" id="installBtn" style="display:none">📲 نصب اپ</button>
+      <button class="btn" id="wizardBtn">🧠 تغییر برنامه / پرسشنامه</button>
+      <button class="btn" id="resetDayBtn" title="پاک کردن تیک‌های امروز">↺</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ================= اطلاعات بدنی ================= -->
+  <div class="section-title">📊 اطلاعات بدنی <small>— ذخیره روی همین دستگاه</small>
+    <button class="btn" id="editBodyBtn" style="margin-inline-start:auto;padding:5px 12px;font-size:.72rem">✏️ ویرایش</button>
+  </div>
+
+  <div class="stats" id="statsGrid"></div>
+
+  <form id="bodyForm" autocomplete="off">
+    <div class="fields">
+      <div><label>وزن (کیلوگرم)</label><input type="number" id="fWeight" min="25" max="250" step="0.1"></div>
+      <div><label>قد (سانتی‌متر)</label><input type="number" id="fHeight" min="80" max="250" step="0.1"></div>
+      <div><label>چربی بدن (٪)</label><input type="number" id="fFat" min="3" max="60" step="0.1"></div>
+      <div><label>ضربان استراحت (bpm)</label><input type="number" id="fPulse" min="30" max="120" step="1"></div>
+      <div><label>هدف کالری روزانه (kcal)</label><input type="number" id="fCal" min="500" max="6000" step="50"></div>
+    </div>
+    <div class="actions">
+      <button type="submit" class="btn primary">💾 ذخیره</button>
+      <button type="button" class="btn" id="cancelBodyBtn">انصراف</button>
+    </div>
+  </form>
+
+  <!-- ================= برنامه هفتگی ================= -->
+  <div class="section-title">🏋️ برنامه هفتگی <small>— روی هر حرکت بزن تا تیک بخورد</small></div>
+
+  <div class="days" id="daysBar" role="tablist"></div>
+  <div class="day-panel" id="dayPanel"></div>
+
+  <!-- ================= پیشرفت هفتگی ================= -->
+  <div class="section-title">📈 پیشرفت هفتگی</div>
+
+  <div class="week-grid">
+    <div class="week-card">
+      <div class="ring">
+        <svg viewBox="0 0 92 92">
+          <defs>
+            <linearGradient id="gradRing" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#0f7a3d"/>
+              <stop offset="60%" stop-color="#22c55e"/>
+              <stop offset="100%" stop-color="#a3e635"/>
+            </linearGradient>
+          </defs>
+          <circle class="bgc" cx="46" cy="46" r="39"/>
+          <circle class="fgc" id="ringFg" cx="46" cy="46" r="39" stroke-dasharray="245.04" stroke-dashoffset="245.04"/>
+        </svg>
+        <div class="pct" id="ringPct">0٪</div>
+      </div>
+      <div class="txt">
+        <h3>مجموع پیشرفت هفته</h3>
+        <p id="weekSummary">—</p>
+      </div>
+    </div>
+    <div class="week-card">
+      <div class="mini-bars" id="miniBars"></div>
+    </div>
+  </div>
+
+  <!-- ================= نقشه حرارتی عضلات ================= -->
+  <div class="section-title">🗺️ نقشه عضلات <small>— وضعیت ریکاوری بر پایه آخرین تمرین · روی هر عضله بزن</small></div>
+  <div class="mus-wrap">
+    <div class="mus-top">
+      <div class="mus-legend">
+        <span><i style="background:#22c55e;box-shadow:0 0 6px #22c55e"></i>آماده</span>
+        <span><i style="background:#a3e635"></i>تقریباً آماده</span>
+        <span><i style="background:#fb923c"></i>در حال ریکاوری</span>
+        <span><i style="background:#ef4444"></i>خسته</span>
+        <span><i style="background:#22382c"></i>بدون سابقه</span>
+      </div>
+      <div class="mus-sum" id="musSum"></div>
+    </div>
+    <div class="mus-figs">
+      <svg viewBox="0 0 170 300" class="mus" aria-label="نمای جلو">
+        <g>
+          <circle class="sil" cx="85" cy="22" r="13"/>
+          <rect class="sil" x="79" y="33" width="12" height="9" rx="3"/>
+          <path class="sil" d="M60,46 Q85,38 110,46 L104,152 Q85,160 66,152 Z"/>
+          <rect class="sil" x="38" y="48" width="15" height="84" rx="7.5" transform="rotate(6 45 90)"/>
+          <rect class="sil" x="117" y="48" width="15" height="84" rx="7.5" transform="rotate(-6 124 90)"/>
+          <rect class="sil" x="64" y="150" width="18" height="106" rx="9"/>
+          <rect class="sil" x="88" y="150" width="18" height="106" rx="9"/>
+          <ellipse class="sil" cx="71" cy="260" rx="9" ry="5"/>
+          <ellipse class="sil" cx="99" cy="260" rx="9" ry="5"/>
+        </g>
+        <ellipse data-m="shoulders" cx="57" cy="52" rx="10" ry="8"/>
+        <ellipse data-m="shoulders" cx="113" cy="52" rx="10" ry="8"/>
+        <ellipse data-m="chest" cx="76" cy="67" rx="10" ry="8"/>
+        <ellipse data-m="chest" cx="94" cy="67" rx="10" ry="8"/>
+        <ellipse data-m="biceps" cx="45" cy="74" rx="6.5" ry="12" transform="rotate(6 45 74)"/>
+        <ellipse data-m="biceps" cx="125" cy="74" rx="6.5" ry="12" transform="rotate(-6 125 74)"/>
+        <rect data-m="abs" x="73" y="82" width="24" height="36" rx="9"/>
+        <path class="sk" d="M75,94 H95 M75,106 H95 M85,84 V116"/>
+        <ellipse data-m="quads" cx="72" cy="180" rx="8.5" ry="26"/>
+        <ellipse data-m="quads" cx="98" cy="180" rx="8.5" ry="26"/>
+        <text class="mus-label" x="85" y="288">جلو</text>
+      </svg>
+      <svg viewBox="0 0 170 300" class="mus" aria-label="نمای پشت">
+        <g>
+          <circle class="sil" cx="85" cy="22" r="13"/>
+          <rect class="sil" x="79" y="33" width="12" height="9" rx="3"/>
+          <path class="sil" d="M60,46 Q85,38 110,46 L104,152 Q85,160 66,152 Z"/>
+          <rect class="sil" x="38" y="48" width="15" height="84" rx="7.5" transform="rotate(6 45 90)"/>
+          <rect class="sil" x="117" y="48" width="15" height="84" rx="7.5" transform="rotate(-6 124 90)"/>
+          <rect class="sil" x="64" y="150" width="18" height="106" rx="9"/>
+          <rect class="sil" x="88" y="150" width="18" height="106" rx="9"/>
+          <ellipse class="sil" cx="71" cy="260" rx="9" ry="5"/>
+          <ellipse class="sil" cx="99" cy="260" rx="9" ry="5"/>
+        </g>
+        <ellipse data-m="shoulders" cx="57" cy="52" rx="10" ry="8"/>
+        <ellipse data-m="shoulders" cx="113" cy="52" rx="10" ry="8"/>
+        <path data-m="back" d="M85,42 L70,58 L85,76 L100,58 Z"/>
+        <path data-m="back" d="M68,60 Q62,88 76,102 L84,96 L84,62 Z"/>
+        <path data-m="back" d="M102,60 Q108,88 94,102 L86,96 L86,62 Z"/>
+        <rect data-m="back" x="77" y="102" width="16" height="16" rx="5"/>
+        <ellipse data-m="triceps" cx="45" cy="74" rx="6.5" ry="12" transform="rotate(6 45 74)"/>
+        <ellipse data-m="triceps" cx="125" cy="74" rx="6.5" ry="12" transform="rotate(-6 125 74)"/>
+        <ellipse data-m="glutes" cx="77" cy="152" rx="9" ry="8"/>
+        <ellipse data-m="glutes" cx="93" cy="152" rx="9" ry="8"/>
+        <ellipse data-m="hams" cx="72" cy="182" rx="8.5" ry="24"/>
+        <ellipse data-m="hams" cx="98" cy="182" rx="8.5" ry="24"/>
+        <ellipse data-m="calves" cx="72" cy="228" rx="7" ry="15"/>
+        <ellipse data-m="calves" cx="98" cy="228" rx="7" ry="15"/>
+        <text class="mus-label" x="85" y="288">پشت</text>
+      </svg>
+    </div>
+    <div id="musInfo">یک عضله را لمس کن تا وضعیتش را ببینی 👆</div>
+  </div>
+
+</main>
+
+<footer>
+  <b>GYM PRO</b> نسخه ۴ · PWA آفلاین — پرسشنامه، برنامه و پیشرفت فقط در مرورگر همین دستگاه (localStorage) نگه‌داشته می‌شوند. قابل نصب با دکمۀ «📲 نصب اپ».
+</footer>
+
+<!-- ================= داک تایمر استراحت ================= -->
+<div id="restDock" role="status">
+  <div class="rd-ring">
+    <svg viewBox="0 0 64 64">
+      <defs>
+        <linearGradient id="gradRest" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#0f7a3d"/>
+          <stop offset="60%" stop-color="#22c55e"/>
+          <stop offset="100%" stop-color="#a3e635"/>
+        </linearGradient>
+      </defs>
+      <circle class="rbg" cx="32" cy="32" r="27"/>
+      <circle class="rfg" id="rFg" cx="32" cy="32" r="27"/>
+    </svg>
+    <b id="rTime">۰:۰۰</b>
+  </div>
+  <div class="rd-info"><small>⏱ تایمر استراحت</small><span class="rd-lbl" id="rLabel">—</span></div>
+  <div class="rd-btns">
+    <button id="rAdd" type="button" title="۱۵ ثانیه اضافه">+۱۵</button>
+    <button id="rSkip" type="button" class="rd-skip" title="رد کردن استراحت">⏭</button>
+    <button id="rClose" type="button" title="بستن">✕</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- ================= ویزارد پرسشنامه ================= -->
+<div id="wizard" role="dialog" aria-modal="true">
+  <div class="wz">
+    <div class="wz-head">
+      <div class="logo"><svg viewBox="0 0 24 24"><path d="M20.5 10.5h-1.2V7.8c0-1-.8-1.8-1.8-1.8h-1.3V4.2c0-.7-.5-1.2-1.2-1.2s-1.2.5-1.2 1.2v1.3h-1.6V4.2c0-.7-.5-1.2-1.2-1.2S9.8 3.5 9.8 4.2v1.3H8.5c-1 0-1.8.8-1.8 1.8v2.7H5.5c-.8 0-1.5.7-1.5 1.5v2.4c0 .8.7 1.5 1.5 1.5h1.2v2.7c0 1 .8 1.8 1.8 1.8h1.3v1.3c0 .7.5 1.2 1.2 1.2s1.2-.5 1.2-1.2v-1.3h1.6v1.3c0 .7.5 1.2 1.2 1.2s1.2-.5 1.2-1.2v-1.3h1.3c1 0 1.8-.8 1.8-1.8v-2.7h1.2c.8 0 1.5-.7 1.5-1.5V12c0-.8-.7-1.5-1.5-1.5zM7.2 13.9v-3.8h1v3.8h-1zm9.6-3.8v3.8h-1v-3.8h1z"/></svg></div>
+      <h2 id="wzTitle">به GYM PRO خوش آمدی 💚</h2>
+      <p id="wzSub">چند سؤال کوتاه می‌پرسم تا بهترین برنامه را به تو پیشنهاد بدهم</p>
+    </div>
+    <div class="wz-dots"><i class="on"></i><i></i><i></i><i></i></div>
+
+    <!-- گام ۱: مشخصات بدنی -->
+    <div class="wz-step on" data-step="1">
+      <div class="q">جنسیت</div>
+      <div class="seg" data-key="sex">
+        <button data-v="m">👨 مرد</button>
+        <button data-v="f">👩 زن</button>
+      </div>
+      <div class="q">مشخصات بدنی</div>
+      <div class="fields">
+        <div><label>سن (سال)</label><input type="number" id="wAge" min="12" max="90" placeholder="مثلاً ۲۸"></div>
+        <div><label>قد (سانتی‌متر)</label><input type="number" id="wHeight" min="120" max="230" placeholder="مثلاً ۱۷۸"></div>
+        <div><label>وزن (کیلوگرم)</label><input type="number" id="wWeight" min="30" max="200" step="0.1" placeholder="مثلاً ۷۸"></div>
+      </div>
+    </div>
+
+    <!-- گام ۲: هدف و سابقه -->
+    <div class="wz-step" data-step="2">
+      <div class="q">هدف اصلی تمرین</div>
+      <div class="seg" data-key="goal">
+        <button data-v="fatloss">🔥 چربی‌سوزی<small>کاهش وزن و تعریف</small></button>
+        <button data-v="muscle">💪 عضله‌سازی<small>افزایش حجم</small></button>
+        <button data-v="strength">🏋️ قدرت<small>رکورد و نیرو</small></button>
+        <button data-v="health">⚖️ سلامت عمومی<small>تناسب و انرژی</small></button>
+      </div>
+      <div class="q">سابقه تمرین</div>
+      <div class="seg" data-key="exp">
+        <button data-v="beginner">🌱 مبتدی<small>کمتر از ۶ ماه</small></button>
+        <button data-v="inter">🌿 متوسط<small>۶ ماه تا ۲ سال</small></button>
+        <button data-v="adv">🌳 پیشرفته<small>بیش از ۲ سال</small></button>
+      </div>
+    </div>
+
+    <!-- گام ۳: انتخاب روزهای هفته -->
+    <div class="wz-step" data-step="3">
+      <div class="q">کدام روزهای هفته می‌توانی تمرین کنی؟ <b style="color:var(--green2)">(۲ تا ۶ روز)</b></div>
+      <div class="seg seg-days" data-key="daypick">
+        <button data-v="0">شنبه</button>
+        <button data-v="1">یکشنبه</button>
+        <button data-v="2">دوشنبه</button>
+        <button data-v="3">سه‌شنبه</button>
+        <button data-v="4">چهارشنبه</button>
+        <button data-v="5">پنجشنبه</button>
+        <button data-v="6">جمعه</button>
+      </div>
+      <div class="q" id="dayCountTxt" style="margin-top:12px"></div>
+      <div class="q" style="margin-top:6px">برنامه دقیقاً روی همین روزها چیده می‌شود و بقیه روزها استراحت (با پیشنهاد ریکاوری فعال) خواهد بود.</div>
+    </div>
+
+    <!-- گام ۴: انتخاب برنامه -->
+    <div class="wz-step" data-step="4">
+      <div class="q" style="margin-bottom:12px">۳ برنامه مناسب تو پیدا شد — <b style="color:var(--lime)">برترین با ⭐</b> مشخص شده، اما انتخاب با خودت است:</div>
+      <div class="plans" id="plansBox"></div>
+    </div>
+
+    <div class="wz-err" id="wzErr"></div>
+    <div class="wz-nav">
+      <button class="btn" id="wzBack">قبلی</button>
+      <button class="btn primary" id="wzNext">بعدی ←</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =====================================================
+   GYM PRO v2 — پرسشنامه + موتور پیشنهاد برنامه
+   تک‌فایل، آفلاین، بدون فریمورک
+   ===================================================== */
+"use strict";
+
+/* ================= ۱) بانک حرکت‌ها =================
+   هر اسلات = جایگاه حرکتی با گزینه‌های سطح‌بندی‌شده (lv: 1 مبتدی، 2 متوسط، 3 پیشرفته) */
+const SLOTS = {
+  bench:[{n:"پرس سینه دمبل",lv:1},{n:"پرس سینه هالتر",lv:2}],
+  incline:[{n:"پرس بالا سینه دمبل",lv:1},{n:"پرس بالا سینه هالتر",lv:2}],
+  fly:[{n:"قفسه سینه دمبل",lv:1},{n:"کراس‌اور سیم‌کش",lv:2}],
+  dips:[{n:"پرس نزدیک سینه",lv:1},{n:"پارال‌پس",lv:2}],
+  pull:[{n:"زیربغل سیم‌کش از بالا",lv:1},{n:"بارفیکس",lv:2}],
+  row:[{n:"زیربغل قایقی سیم‌کش",lv:1},{n:"روئینگ هالتر",lv:2}],
+  oneRow:[{n:"زیربغل دمبل تک‌دست",lv:1},{n:"روئینگ اره‌ای",lv:2}],
+  revfly:[{n:"نشر از عقب دمبل",lv:1},{n:"فیس‌پول",lv:2}],
+  ohp:[{n:"پرس سرشانه دمبل",lv:1},{n:"پرس سرشانه هالتر",lv:2}],
+  lateral:[{n:"نشر از جانب دمبل",lv:1}],
+  front:[{n:"نشر از جلو دمبل",lv:1}],
+  shrug:[{n:"کول / شراگ",lv:1}],
+  facepull:[{n:"فیس‌پول سیم‌کش",lv:1}],
+  curl:[{n:"جلو بازو دمبل",lv:1},{n:"جلو بازو هالتر ایستاده",lv:2}],
+  hammer:[{n:"جلو بازو چکشی",lv:1}],
+  conc:[{n:"جلو بازو تمرکزی",lv:1}],
+  pushdown:[{n:"پشت بازو سیم‌کش",lv:1}],
+  ohetric:[{n:"پشت بازو دمبل بالای سر",lv:1},{n:"پشت بازو پارال‌پس معکوس",lv:2}],
+  squat:[{n:"اسکات با دمبل (گابلت)",lv:1},{n:"اسکات هالتر",lv:2}],
+  legpress:[{n:"پرس پا",lv:1}],
+  lunge:[{n:"لانگ دمبل در جا",lv:1},{n:"لانگ راه‌رونده",lv:2}],
+  rdl:[{n:"ددلیفت رومانیایی دمبل",lv:1},{n:"ددلیفت رومانیایی هالتر",lv:2}],
+  dead:[{n:"ددلیفت رومانیایی",lv:1},{n:"ددلیفت کلاسیک",lv:3}],
+  legcurl:[{n:"پشت ران دستگاه",lv:1}],
+  legext:[{n:"جلو ران دستگاه",lv:1}],
+  calf:[{n:"ساق پا ایستاده",lv:1}],
+  abs1:[{n:"کرانچ روی میز شیب‌دار",lv:1}],
+  abs2:[{n:"بالا آوردن پا (زیرشکم)",lv:1}],
+  plank:[{n:"پلانک (۴۵ ثانیه)",lv:1}],
+  cable:[{n:"کرانچ سیم‌کش شکم",lv:1}],
+  burpee:[{n:"برپی",lv:1}],
+  rope:[{n:"طناب‌زنی (۴۰ ثانیه)",lv:1}],
+  mc:[{n:"کوهنورد (Mountain Climber)",lv:1}],
+  kbs:[{n:"اسکات پرشی",lv:1},{n:"کتل‌بل سوئینگ",lv:2}],
+  jack:[{n:"پرش ستاره‌ای (Jumping Jack)",lv:1}],
+  clean:[{n:"کلین آپ دمبل",lv:2},{n:"کلین و پرس",lv:3}],
+  hang:[{n:"آویزان از بارفیکس (۳۰ ثانیه)",lv:1}],
+};
+
+/* هر اسلات → گروه عضلانی (برای نقشه حرارتی)؛ cardio در نقشه حساب نمی‌شود */
+const SLOT_M = {
+  bench:"chest",incline:"chest",fly:"chest",dips:"chest",
+  pull:"back",row:"back",oneRow:"back",shrug:"back",hang:"back",
+  revfly:"shoulders",ohp:"shoulders",lateral:"shoulders",front:"shoulders",facepull:"shoulders",clean:"shoulders",
+  curl:"biceps",hammer:"biceps",conc:"biceps",
+  pushdown:"triceps",ohetric:"triceps",
+  squat:"quads",legpress:"quads",legext:"quads",
+  rdl:"hams",dead:"hams",legcurl:"hams",kbs:"hams",
+  lunge:"glutes", calf:"calves",
+  abs1:"abs",abs2:"abs",plank:"abs",cable:"abs",
+  burpee:"cardio",rope:"cardio",mc:"cardio",jack:"cardio",
+};
+
+/* ================= ۲) قالب روزها =================
+   هر قالب: فهرست [اسلات، نوع] — C=چندمفصلی، I=تک‌مفصلی */
+const TPL = {
+  FULL_A:{name:"فول‌بادی A",ex:[["bench","C"],["pull","C"],["ohp","C"],["legpress","C"],["pushdown","I"],["abs1","I"]]},
+  FULL_B:{name:"فول‌بادی B",ex:[["row","C"],["incline","C"],["squat","C"],["lateral","I"],["curl","I"],["plank","I"]]},
+  FULL_C:{name:"فول‌بادی C",ex:[["dead","C"],["fly","C"],["rdl","C"],["ohp","C"],["hammer","I"],["abs2","I"]]},
+  PUSH:{name:"فشاری (سینه/سرشانه/پشت‌بازو)",ex:[["bench","C"],["incline","C"],["ohp","C"],["fly","I"],["lateral","I"],["pushdown","I"],["ohetric","I"]]},
+  PULL:{name:"کشنده (زیربغل/جلوبازو)",ex:[["pull","C"],["row","C"],["oneRow","C"],["facepull","I"],["revfly","I"],["curl","I"],["hammer","I"]]},
+  LEGS:{name:"پا",ex:[["squat","C"],["legpress","C"],["rdl","C"],["lunge","I"],["legcurl","I"],["calf","I"],["abs1","I"]]},
+  UPPER:{name:"بالاتنه",ex:[["bench","C"],["pull","C"],["incline","C"],["row","C"],["ohp","C"],["curl","I"],["pushdown","I"]]},
+  LOWER:{name:"پایین‌تنه",ex:[["squat","C"],["rdl","C"],["legpress","C"],["lunge","I"],["legext","I"],["calf","I"],["plank","I"]]},
+  HIIT:{name:"HIIT و کاردی",ex:[["burpee","C"],["rope","C"],["mc","I"],["kbs","C"],["jack","I"],["plank","I"]]},
+  BRO_C:{name:"سینه و پشت‌بازو",ex:[["bench","C"],["incline","C"],["fly","I"],["dips","C"],["pushdown","I"],["ohetric","I"]]},
+  BRO_B:{name:"زیربغل و جلو‌بازو",ex:[["pull","C"],["row","C"],["oneRow","C"],["revfly","I"],["curl","I"],["conc","I"]]},
+  BRO_L:{name:"پا",ex:[["squat","C"],["legpress","C"],["rdl","C"],["lunge","I"],["legext","I"],["calf","I"]]},
+  BRO_S:{name:"سرشانه و شکم",ex:[["ohp","C"],["lateral","I"],["front","I"],["shrug","I"],["abs1","I"],["abs2","I"]]},
+  BRO_A:{name:"بازو تخصصی",ex:[["curl","C"],["hammer","I"],["conc","I"],["pushdown","C"],["ohetric","I"],["dips","I"]]},
+};
+
+/* ================= ۳) برنامه‌های نامزد (بر اساس تعداد روز) ================= */
+const CANDS = {
+  2:[
+    {id:"full2",name:"فول‌بادی ۲ روز",tag:"تعادل کامل — ایده‌آل شروع",tpl:["FULL_A","FULL_B"],
+     why:"در هر جلسه کل بدن را پوشش می‌دهد؛ بهترین انتخاب وقتی وقت محدود است.",
+     fit:{goal:{health:12,fatloss:8,muscle:5,strength:2},exp:{beginner:14,inter:6,adv:2}}},
+    {id:"ul2",name:"بالاتنه / پایین‌تنه",tag:"تفکیک نیم‌تنه‌ها",tpl:["UPPER","LOWER"],
+     why:"حجم مناسب‌تر برای هر عضله؛ مناسب کسانی که پایه تمرینی دارند.",
+     fit:{goal:{muscle:9,strength:9,fatloss:4,health:4},exp:{beginner:3,inter:9,adv:9}}},
+    {id:"fc2",name:"فول‌بادی + چربی‌سوزی",tag:"قدرتی + کاردی HIIT",tpl:["FULL_A","HIIT"],
+     why:"یک روز قدرتی کامل + یک روز کاردی شدت بالا برای کمبود کالری.",
+     fit:{goal:{fatloss:14,health:8,muscle:3,strength:2},exp:{beginner:9,inter:6,adv:3}}},
+  ],
+  3:[
+    {id:"full3",name:"فول‌بادی ۳ روز",tag:"بیشترین بازده مبتدی",tpl:["FULL_A","FULL_B","FULL_C"],
+     why:"هر عضله ۳ بار در هفته تحریک می‌شود؛ سریع‌ترین پیشرفت در سال اول.",
+     fit:{goal:{health:10,fatloss:8,muscle:6,strength:4},exp:{beginner:15,inter:6,adv:2}}},
+    {id:"ppl3",name:"پوش / پول / لگز",tag:"کلاسیک و محبوب",tpl:["PUSH","PULL","LEGS"],
+     why:"تفکیک فشاری/کشنده/پا؛ تمرکز بیشتر روی هر گروه عضله.",
+     fit:{goal:{muscle:12,strength:7,fatloss:5,health:4},exp:{beginner:3,inter:11,adv:10}}},
+    {id:"ulf3",name:"بالاتنه / پایین‌تنه / فول",tag:"ترکیب هوشمند",tpl:["UPPER","LOWER","FULL_B"],
+     why:"پوشش کامل در ۳ روز با انعطاف بالا برای برنامه شلوغ.",
+     fit:{goal:{muscle:8,health:9,fatloss:5,strength:6},exp:{beginner:7,inter:9,adv:6}}},
+  ],
+  4:[
+    {id:"ul4",name:"بالاتنه/پایین‌تنه ×۲",tag:"پشتوانه علمی قوی",tpl:["UPPER","LOWER","UPPER","LOWER"],
+     why:"هر عضله ۲ بار در هفته — بیشترین محرک رشد با ریکاوری کافی.",
+     fit:{goal:{muscle:13,strength:11,fatloss:6,health:8},exp:{beginner:6,inter:11,adv:10}}},
+    {id:"pplf4",name:"پوش/پول/لگز + فول",tag:"اسپلیت + پوشش کامل",tpl:["PUSH","PULL","LEGS","FULL_A"],
+     why:"سه روز تخصصی + یک روز کل‌بدن برای جاب‌مانده‌ها.",
+     fit:{goal:{muscle:10,fatloss:8,health:6,strength:6},exp:{beginner:4,inter:10,adv:9}}},
+    {id:"bro4",name:"اسپلیت کلاسیک ۴ روز",tag:"بدنسازی سنتی",tpl:["BRO_C","BRO_B","BRO_L","BRO_S"],
+     why:"هر روز یک گروه عضله با تمرکز بالا؛ لذت‌بخش برای بدنسازان.",
+     fit:{goal:{muscle:9,fatloss:5,strength:4,health:3},exp:{beginner:2,inter:7,adv:11}}},
+  ],
+  5:[
+    {id:"pplul5",name:"PPL + بالاتنه + پایین‌تنه",tag:"حجم و فرکانس عالی",tpl:["PUSH","PULL","LEGS","UPPER","LOWER"],
+     why:"ترکیب اسپلیت و فرکانس دوباره — انتخاب حرفه‌ای‌های طبیعی.",
+     fit:{goal:{muscle:15,strength:9,fatloss:6,health:4},exp:{beginner:2,inter:8,adv:13}}},
+    {id:"bro5",name:"اسپلیت ۵ روز عضله‌ای",tag:"پمپ و تمرکز حداکثری",tpl:["BRO_C","BRO_B","BRO_L","BRO_S","BRO_A"],
+     why:"هر گروه عضله یک روز اختصاصی + یک روز بازو تخصصی.",
+     fit:{goal:{muscle:10,fatloss:5,strength:5,health:3},exp:{beginner:2,inter:8,adv:11}}},
+    {id:"fit5",name:"فول‌بادی ۵ روز (فریمت)",tag:"حجم کم، تکرار بالا",tpl:["FULL_A","FULL_B","HIIT","FULL_C","FULL_A"],
+     why:"کالری‌سوزی مداوم با ست‌های سبک‌تر؛ عالی برای چربی‌سوزی.",
+     fit:{goal:{fatloss:15,health:12,muscle:4,strength:2},exp:{beginner:9,inter:6,adv:3}}},
+  ],
+  6:[
+    {id:"ppl6",name:"پوش/پول/لگز ×۲",tag:"استاندارد طلایی حجم",tpl:["PUSH","PULL","LEGS","PUSH","PULL","LEGS"],
+     why:"هر عضله ۲× در هفته با حجم بالا — برای رشد حداکثری.",
+     fit:{goal:{muscle:17,strength:9,fatloss:6,health:3},exp:{beginner:1,inter:6,adv:14}}},
+    {id:"hy6",name:"PPL + ترکیب هوشمند",tag:"تعادل حجم و کاردی",tpl:["PUSH","PULL","LEGS","UPPER","LOWER","HIIT"],
+     why:"پنج روز قدرتی متنوع + یک روز HIIT؛ کامل‌ترین برنامه هفته.",
+     fit:{goal:{fatloss:12,muscle:10,health:10,strength:7},exp:{beginner:3,inter:10,adv:10}}},
+    {id:"bro6",name:"اسپلیت ۶ روز حرفه‌ای",tag:"تمرکز تک‌عضله",tpl:["BRO_C","BRO_B","BRO_L","BRO_S","BRO_A","FULL_C"],
+     why:"اسپلیت کامل بدنسازی + یک روز فول‌بادی در پایان هفته.",
+     fit:{goal:{muscle:11,fatloss:4,strength:6,health:3},exp:{beginner:1,inter:6,adv:12}}},
+  ],
+};
+
+/* ================= ۴) طرح‌های تکرار/ست بر اساس هدف ================= */
+const SCHEME = {
+  fatloss:{C:{s:3,r:"12-15",rest:60}, I:{s:3,r:"15-20",rest:45}},
+  muscle:{C:{s:4,r:"8-12",rest:90},  I:{s:3,r:"10-15",rest:60}},
+  strength:{C:{s:5,r:"4-8",rest:150},I:{s:3,r:"8-10",rest:75}},
+  health:{C:{s:3,r:"10-12",rest:75}, I:{s:3,r:"12-15",rest:60}},
+};
+
+/* ================= ۵) هفته و الگوهای توزیع روز ================= */
+const WEEK = ["sa","ya","do","se","ch","pa","jo"];
+const WNAMES = ["شنبه","یکشنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنجشنبه","جمعه"];
+const PATTERNS = {2:[0,3],3:[0,2,4],4:[0,1,3,4],5:[0,1,2,3,4],6:[0,1,2,3,4,5]};
+const REST_NOTES = ["۳۰ دقیقه پیاده‌روی سریع + ۱۰ دقیقه کشش","ریکاوری فعال — فوم‌رولر و کشش سبک","خواب کافی و حرکات کششی سبک","استراحت کامل — هفته را بساز 💚"];
+
+/* ================= ۶) وضعیت و ذخیره‌سازی ================= */
+const LS_PROFILE="gympro.profile.v1", LS_BODY="gympro.body.v1", LS_DONE="gympro.done.v2";
+const DEFAULT_BODY={weight:78,height:178,fat:18,pulse:62,cal:2600};
+const DEFAULT_PROFILE={sex:"m",age:28,height:178,weight:78,goal:"health",exp:"beginner",days:3,dayIdx:[0,2,4],programId:""};
+
+function jload(k,def){ try{ return Object.assign({},def,JSON.parse(localStorage.getItem(k)||"{}")); }catch(e){ return Object.assign({},def); } }
+function jsave(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+
+let profile = jload(LS_PROFILE, DEFAULT_PROFILE);
+let body    = jload(LS_BODY, DEFAULT_BODY);
+let done    = jload(LS_DONE, {prog:"",map:{}});
+if(done.prog !== profile.programId){ done = {prog:profile.programId, map:{}}; }  // با تغییر برنامه، تیک‌ها صفر
+// مهاجرت نسخه‌های قبلی (بدون dayIdx) → الگوی پیش‌فرض همان تعداد روز
+if(!Array.isArray(profile.dayIdx) || profile.dayIdx.length<2) profile.dayIdx = PATTERNS[profile.days] || PATTERNS[3];
+
+let PLAN = [];
+let activeDay = "";
+
+/* ================= ۷) موتور ساخت برنامه ================= */
+function pickEx(slotKey, exp){
+  const arr = SLOTS[slotKey];
+  const maxLv = exp==="beginner" ? 1 : exp==="inter" ? 2 : 3;
+  let best = arr[0];
+  for(const e of arr){ if(e.lv<=maxLv) best = e; }
+  return best.n;
+}
+function buildDayEx(tplKey){
+  const t = TPL[tplKey];
+  const sc = SCHEME[profile.goal] || SCHEME.health;
+  return t.ex.map(([slot,kind],i)=>{
+    let s = sc[kind].s;
+    if(profile.exp==="beginner") s = Math.max(3, s-1);
+    if(profile.exp==="adv" && kind==="C" && i===0) s = Math.min(5, s+1);
+    return {n:pickEx(slot,profile.exp), s, r:sc[kind].r, rest:sc[kind].rest, m:SLOT_M[slot]};
+  });
+}
+function findCand(id){
+  for(const k in CANDS){ const c = CANDS[k].find(x=>x.id===id); if(c) return c; }
+  return null;
+}
+function buildPlan(candId){
+  const c = findCand(candId);
+  if(!c) return null;
+  const sel = Array.isArray(profile.dayIdx) ? profile.dayIdx.filter(x=>x>=0&&x<=6) : [];
+  const trainIdx = sel.length===c.tpl.length ? sel : (PATTERNS[c.tpl.length] || PATTERNS[3]);
+  const days = [];
+  let ti = 0, ri = 0;
+  WEEK.forEach((wid,wi)=>{
+    if(trainIdx.includes(wi)){
+      const t = TPL[c.tpl[ti]];
+      days.push({id:wid, name:WNAMES[wi], focus:t.name, type:"train", ex:buildDayEx(c.tpl[ti])});
+      ti++;
+    }else{
+      days.push({id:wid, name:WNAMES[wi], focus:"استراحت", type:"rest", note:REST_NOTES[ri++ % REST_NOTES.length]});
+    }
+  });
+  return {id:c.id, name:c.name, days};
+}
+function candScore(c, p){
+  const g = (c.fit.goal[p.goal]||0) + (c.fit.exp[p.exp]||0);
+  return Math.max(55, Math.min(97, 60 + g));
+}
+function candidates(p){
+  p = p || profile;   // حین ویزارد با wState صدا زده می‌شود، نه پروفایل ذخیره‌شده
+  const list = (CANDS[p.days]||CANDS[3]).map(c=>({...c, score:candScore(c,p)}));
+  list.sort((a,b)=>b.score-a.score);
+  return list;
+}
+
+/* ================= ۸) ابزار فارسی ================= */
+function fa(n){ return Number(n).toLocaleString("fa-IR"); }
+function faPct(n){ return fa(n)+"٪"; }
+function todayId(){ const g=new Date().getDay(); return ["sa","ya","do","se","ch","pa","jo"][g]; }
+function dayById(id){ return PLAN.find(d=>d.id===id); }
+function doneList(id){ return Array.isArray(done.map[id]) ? done.map[id] : []; }
+function dayProgress(d){
+  if(!d.ex || !d.ex.length) return null;
+  return Math.round(doneList(d.id).length / d.ex.length * 100);
+}
+
+/* ================= ۹) کارت‌های اطلاعات بدنی ================= */
+function bmiOf(b){ const h=b.height/100; return h>0 ? +(b.weight/(h*h)).toFixed(1) : 0; }
+function bmiInfo(v){
+  if(!v) return {t:"—",c:""};
+  if(v<18.5) return {t:"کمبود وزن",c:"warn"};
+  if(v<25)   return {t:"نرمال 💚",c:""};
+  if(v<30)   return {t:"اضافه وزن",c:"warn"};
+  return {t:"نیاز به توجه",c:"bad"};
+}
+function bmrOf(b){ // Mifflin-St Jeor با جنسیت/سن پروفایل
+  const base = 10*b.weight + 6.25*b.height - 5*(profile.age||28);
+  return Math.round(profile.sex==="f" ? base-161 : base+5);
+}
+const GOAL_TXT = {fatloss:"🔥 چربی‌سوزی", muscle:"💪 عضله‌سازی", strength:"🏋️ قدرت", health:"⚖️ سلامت عمومی"};
+const EXP_TXT  = {beginner:"مبتدی", inter:"متوسط", adv:"پیشرفته"};
+
+const ICONS = {
+  weight:'<svg viewBox="0 0 24 24"><path d="M12 7a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM5 22l2.5-13h1.2M19 22l-2.5-13h-1.2M4 9h16M3 9l2 13h14l2-13"/></svg>',
+  height:'<svg viewBox="0 0 24 24"><path d="M4 21V3M4 6h4M4 11h6M4 16h4M20 3v18M20 6h-4M20 11h-6M20 16h-4"/></svg>',
+  bmi:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 12l3.5-3.5M8 15.5c1-1.5 2.5-2 4-2"/></svg>',
+  fat:'<svg viewBox="0 0 24 24"><path d="M12 21s-7-4.6-9.2-9A5.3 5.3 0 0 1 12 6.5 5.3 5.3 0 0 1 21.2 12C19 16.4 12 21 12 21z"/></svg>',
+  pulse:'<svg viewBox="0 0 24 24"><path d="M2 12h4l2.5-6 4 12L15 12h7"/></svg>',
+  cal:'<svg viewBox="0 0 24 24"><path d="M12 22c4 0 7-2.7 7-6.8 0-5.4-5-6.6-4.3-11.2-2.4.9-4.2 3.2-4.2 5.6 0 1.7.8 2.6.8 3.9 0 1.1-.9 2-2 2-2.4 0-3.6-3.3-3.3-5.9C4.6 11 5 12.9 5 15.2 5 19.3 8 22 12 22z"/></svg>',
+};
+
+function renderStats(){
+  const bmi = bmiOf(body), bi = bmiInfo(bmi), bmr = bmrOf(body);
+  const lean = body.weight - (body.weight*body.fat/100);
+  const cards = [
+    {ico:"weight", lbl:"وزن", val:fa(body.weight), unit:"kg", sub:"بدن خشک: "+fa(+lean.toFixed(1))+" kg"},
+    {ico:"height", lbl:"قد", val:fa(body.height), unit:"cm", sub:"سن: "+fa(profile.age||"—")+" سال"},
+    {ico:"bmi", lbl:"BMI توده بدنی", val:fa(bmi), unit:"", sub:bi.t, cls:bi.c},
+    {ico:"fat", lbl:"چربی بدن", val:fa(body.fat), unit:"٪", sub: body.fat<=15?"کات 💚":(body.fat<=22?"سالم":"قابل کاهش")},
+    {ico:"pulse", lbl:"ضربان استراحت", val:fa(body.pulse), unit:"bpm", sub: body.pulse<=65?"قلب ورزیده 💪":"هدف: زیر ۶۵"},
+    {ico:"cal", lbl:"کالری روزانه", val:fa(body.cal), unit:"kcal", sub:"پایه (BMR): "+fa(bmr)},
+  ];
+  document.getElementById("statsGrid").innerHTML = cards.map(c=>`
+    <div class="stat">
+      <div class="ico">${ICONS[c.ico]}</div>
+      <div class="lbl">${c.lbl}</div>
+      <div class="val">${c.val}${c.unit?`<u>${c.unit}</u>`:""}</div>
+      <div class="sub ${c.cls||""}">${c.sub}</div>
+    </div>`).join("");
+}
+
+/* فرم سریع ویرایش بدن */
+const bodyForm = document.getElementById("bodyForm");
+document.getElementById("editBodyBtn").addEventListener("click", ()=>{
+  if(bodyForm.classList.contains("open")){ bodyForm.classList.remove("open"); return; }
+  document.getElementById("fWeight").value=body.weight;
+  document.getElementById("fHeight").value=body.height;
+  document.getElementById("fFat").value=body.fat;
+  document.getElementById("fPulse").value=body.pulse;
+  document.getElementById("fCal").value=body.cal;
+  bodyForm.classList.add("open");
+});
+document.getElementById("cancelBodyBtn").addEventListener("click", ()=> bodyForm.classList.remove("open"));
+bodyForm.addEventListener("submit", e=>{
+  e.preventDefault();
+  const g=(id,def)=>{ const v=parseFloat(document.getElementById(id).value); return isFinite(v)&&v>0?v:def; };
+  body = {weight:g("fWeight",body.weight), height:g("fHeight",body.height), fat:g("fFat",body.fat),
+          pulse:g("fPulse",body.pulse), cal:g("fCal",body.cal)};
+  profile.weight=body.weight; profile.height=body.height;
+  jsave(LS_BODY,body); jsave(LS_PROFILE,profile);
+  bodyForm.classList.remove("open");
+  renderStats();
+  toast("اطلاعات بدنی ذخیره شد 💚");
+});
+
+/* ================= ۱۰) رندر هفته (تب/پنل/رینگ) ================= */
+function renderDays(){
+  const t = todayId();
+  document.getElementById("daysBar").innerHTML = PLAN.map(d=>{
+    const p = dayProgress(d);
+    const dot = p===null ? "" : (p>=100 ? `<span class="dot full"></span>` : (p>0 ? `<span class="dot part"></span>` : `<span class="dot"></span>`));
+    const focus = d.focus.length>14 ? d.focus.slice(0,13)+"…" : d.focus;
+    return `<button class="day-tab ${d.id===activeDay?"active":""} ${d.id===t?"today":""}" data-day="${d.id}" role="tab">
+      ${dot}<b>${d.name}</b>${focus}
+    </button>`;
+  }).join("");
+  document.querySelectorAll(".day-tab").forEach(btn=>{
+    btn.addEventListener("click", ()=>{ activeDay=btn.dataset.day; renderDays(); renderDayPanel(); });
+  });
+}
+
+function renderDayPanel(){
+  const d = dayById(activeDay);
+  const panel = document.getElementById("dayPanel");
+  if(!d){ panel.innerHTML=""; return; }
+
+  if(d.type==="rest"){
+    panel.innerHTML = `
+      <div class="day-head"><h2>${d.name} <span class="badge">روز غیرتمرینی</span></h2></div>
+      <div class="rest"><div class="big">🌙</div><b>${d.focus}</b><p>${d.note||""}</p></div>`;
+    return;
+  }
+
+  const dl = doneList(d.id);
+  const pct = Math.round(dl.length/d.ex.length*100);
+  const totalSets = d.ex.reduce((a,e)=>a+e.s,0);
+  const doneSets  = d.ex.reduce((a,e,i)=>a+(dl.includes(i)?e.s:0),0);
+
+  panel.innerHTML = `
+    <div class="day-head">
+      <h2>${d.name} — ${d.focus} <span class="badge">${fa(d.ex.length)} حرکت</span></h2>
+      <span class="goal">ست‌ها: <b style="color:var(--green2)">${fa(doneSets)}</b> / ${fa(totalSets)}</span>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-meta"><span>پیشرفت تمرین امروز</span><b id="dayPct">${faPct(pct)}</b></div>
+      <div class="bar"><i id="dayBar" style="width:${pct}%"></i></div>
+    </div>
+    <div class="ex-list">
+      ${d.ex.map((e,i)=>`
+        <div class="ex ${dl.includes(i)?"done":""}" data-i="${i}" role="button" tabindex="0">
+          <span class="chk"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+          <span class="num">${fa(i+1)}</span>
+          <span class="info"><b>${e.n}</b><small>استراحت بین ست‌ها: ${fa(e.rest)} ثانیه</small></span>
+          <span class="spec">${fa(e.s)}×${e.r}<small>ست × تکرار</small></span>
+          <button class="ex-t" type="button" title="شروع تایمر استراحت" data-rest="${e.rest}" data-n="${e.n}">⏱</button>
+        </div>`).join("")}
+    </div>`;
+
+  panel.querySelectorAll(".ex").forEach(el=>{
+    const toggle = ()=>{
+      const i = +el.dataset.i;
+      let list = doneList(d.id);
+      const wasFull = list.length===d.ex.length;
+      const e = d.ex[i];
+      if(list.includes(i)) list = list.filter(x=>x!==i);
+      else{
+        list.push(i);
+        if(e.m && MUSCLES[e.m]){ muscles[e.m] = Date.now(); jsave(LS_MUS, muscles); renderMuscles(); }
+        if(e.rest) startRest(e.rest, e.n);
+      }
+      done.map[d.id] = list;
+      jsave(LS_DONE, done);
+      renderDayPanel(); renderDays(); renderWeek();
+      if(!wasFull && list.length===d.ex.length) toast("🎉 آفرین! تمرین "+d.name+" کامل شد");
+    };
+    el.addEventListener("click", toggle);
+    el.addEventListener("keydown", ev=>{ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); toggle(); } });
+  });
+  panel.querySelectorAll(".ex-t").forEach(b=>{
+    b.addEventListener("click", ev=>{ ev.stopPropagation(); startRest(+b.dataset.rest, b.dataset.n); });
+  });
+}
+
+function renderWeek(){
+  const trainDays = PLAN.filter(d=>d.type==="train");
+  const totalEx = trainDays.reduce((a,d)=>a+d.ex.length,0);
+  const doneEx  = trainDays.reduce((a,d)=>a+Math.min(doneList(d.id).length,d.ex.length),0);
+  const pct = totalEx ? Math.round(doneEx/totalEx*100) : 0;
+
+  const C = 2*Math.PI*39;
+  const fg = document.getElementById("ringFg");
+  fg.setAttribute("stroke-dasharray", C.toFixed(2));
+  fg.setAttribute("stroke-dashoffset", (C*(1-pct/100)).toFixed(2));
+  document.getElementById("ringPct").textContent = faPct(pct);
+
+  const fullDays = trainDays.filter(d=>dayProgress(d)>=100).length;
+  document.getElementById("weekSummary").innerHTML =
+    `${fa(doneEx)} از ${fa(totalEx)} حرکت انجام شد<br>` +
+    `روزهای کامل: <b style="color:var(--lime)">${fa(fullDays)}</b> از ${fa(trainDays.length)} 💪`;
+
+  document.getElementById("miniBars").innerHTML = trainDays.map(d=>{
+    const p = dayProgress(d);
+    return `<div class="mb"><span class="nm">${d.name}</span><span class="bar"><i style="width:${p}%"></i></span><span class="pv">${fa(p)}٪</span></div>`;
+  }).join("");
+}
+
+function renderProgChip(){
+  const el = document.getElementById("progChip");
+  if(PLAN.length){
+    el.style.display="";
+    el.innerHTML = `🧾 <b>${PLAN._progName||""}</b> · ${fa(profile.days)} روز/هفته · ${GOAL_TXT[profile.goal]||""}`;
+  }else el.style.display="none";
+}
+
+function renderAll(){
+  renderTodayChip(); renderStats(); renderProgChip(); renderMuscles();
+  if(PLAN.length){ renderDays(); renderDayPanel(); renderWeek(); }
+}
+
+/* ================= ۱۱) ویزارد پرسشنامه ================= */
+const wiz = document.getElementById("wizard");
+const wzErr = document.getElementById("wzErr");
+let wStep = 1;
+const wState = Object.assign({}, profile);   // کپی قابل ویرایش حین ویزارد
+
+function wizOpen(step){
+  wStep = step||1;
+  Object.assign(wState, profile);
+  syncWizUI();
+  wiz.classList.add("open");
+  document.body.classList.add("locked");
+}
+function wizClose(){
+  wiz.classList.remove("open");
+  document.body.classList.remove("locked");
+}
+function syncWizUI(){
+  document.querySelectorAll(".wz-step").forEach(s=> s.classList.toggle("on", +s.dataset.step===wStep));
+  document.querySelectorAll(".wz-dots i").forEach((d,i)=> d.classList.toggle("on", i<wStep));
+  document.querySelectorAll(".seg").forEach(seg=>{
+    const key = seg.dataset.key;
+    seg.querySelectorAll("button").forEach(b=>{
+      const on = key==="daypick" ? (wState.dayIdx||[]).includes(+b.dataset.v) : String(wState[key])===b.dataset.v;
+      b.classList.toggle("sel", on);
+    });
+  });
+  const dc = document.getElementById("dayCountTxt");
+  if(dc){
+    const n = (wState.dayIdx||[]).length;
+    dc.innerHTML = n>=2
+      ? `<b style="color:var(--green2)">${fa(n)} روز</b> انتخاب شد — برنامه روی همین روزها چیده می‌شود`
+      : (n ? "فقط ۱ روز انتخاب شده — حداقل ۲ روز لازم است" : "هنوز روزی انتخاب نشده — حداقل ۲ روز را بزن");
+  }
+  document.getElementById("wAge").value = wState.age||"";
+  document.getElementById("wHeight").value = wState.height||"";
+  document.getElementById("wWeight").value = wState.weight||"";
+  document.getElementById("wzBack").style.visibility = wStep>1 ? "visible" : "hidden";
+  document.getElementById("wzNext").style.display = wStep<4 ? "" : "none";
+  wzErr.textContent = "";
+  const titles = {
+    1:["مشخصات بدنی","قد، وزن و سن تو مبنای محاسبه کالری و انتخاب حرکت‌هاست"],
+    2:["هدف و سابقه","بر اساس هدف، ست/تکرار و سختی حرکت‌ها تنظیم می‌شود"],
+    3:["روزهای تمرین","مهم‌ترین سؤال: چند روز در هفته آزاد داری؟"],
+    4:["برنامه‌های پیشنهادی","۳ گزینه ساخته شد — حق انتخاب با توست 💚"],
+  };
+  document.getElementById("wzTitle").textContent = titles[wStep][0];
+  document.getElementById("wzSub").textContent = titles[wStep][1];
+  if(wStep===4) renderPlans();
+  wiz.scrollTop = 0;
+}
+function readNumInputs(){
+  const num=id=>parseFloat(document.getElementById(id).value);
+  wState.age = num("wAge")||0;
+  wState.height = num("wHeight")||0;
+  wState.weight = num("wWeight")||0;
+}
+function validateStep(){
+  if(wStep===1){
+    readNumInputs();
+    if(!["m","f"].includes(wState.sex)) return "جنسیت را انتخاب کن";
+    if(!(wState.age>=12 && wState.age<=90)) return "سن معتبر وارد کن (۱۲ تا ۹۰)";
+    if(!(wState.height>=120 && wState.height<=230)) return "قد معتبر وارد کن (سانتی‌متر)";
+    if(!(wState.weight>=30 && wState.weight<=200)) return "وزن معتبر وارد کن (کیلوگرم)";
+  }
+  if(wStep===2){
+    if(!wState.goal) return "هدف تمرینی را انتخاب کن";
+    if(!wState.exp)  return "سابقه تمرین را انتخاب کن";
+  }
+  if(wStep===3){
+    const n = (wState.dayIdx||[]).length;
+    if(n<2) return "حداقل ۲ روز از هفته را انتخاب کن";
+    if(n>6) return "حداکثر ۶ روز — جمعه را هم برای استراحت بگذار 🙂";
+    wState.days = n;
+  }
+  return "";
+}
+document.querySelectorAll(".seg button").forEach(b=>{
+  b.addEventListener("click", ()=>{
+    const key = b.closest(".seg").dataset.key;
+    if(key==="daypick"){
+      const wi = +b.dataset.v;
+      const arr = (wState.dayIdx||[]).slice();
+      const at = arr.indexOf(wi);
+      if(at>=0) arr.splice(at,1); else arr.push(wi);
+      wState.dayIdx = arr.sort((x,y)=>x-y);
+      wState.days = arr.length;
+    }else{
+      wState[key] = b.dataset.v;
+    }
+    syncWizUI();
+  });
+});
+["wAge","wHeight","wWeight"].forEach(id=> document.getElementById(id).addEventListener("input", ()=>{ if(wStep===1) readNumInputs(); }));
+document.getElementById("wzNext").addEventListener("click", ()=>{
+  const err = validateStep();
+  if(err){ wzErr.textContent = "⚠️ "+err; return; }
+  wStep = Math.min(4, wStep+1);
+  syncWizUI();
+});
+document.getElementById("wzBack").addEventListener("click", ()=>{ wStep = Math.max(1, wStep-1); syncWizUI(); });
+document.getElementById("wizardBtn").addEventListener("click", ()=> wizOpen(1));
+
+/* کارت‌های برنامه در گام ۴ */
+function renderPlans(){
+  const list = candidates(wState);
+  document.getElementById("plansBox").innerHTML = list.map((c,i)=>{
+    const trainIdx = (wState.dayIdx||[]).length===c.tpl.length ? wState.dayIdx : (PATTERNS[c.tpl.length]||[]);
+    const sched = WNAMES.map((w,wi)=>`<i class="${trainIdx.includes(wi)?"tr":""}">${w}${trainIdx.includes(wi)?" ✓":""}</i>`).join("");
+    return `<div class="plan ${i===0?"best":""}">
+      ${i===0?'<span class="star">⭐ پیشنهاد برتر</span>':""}
+      <div class="p-top">
+        <div><h3>${c.name}</h3><div class="tag">${c.tag}</div></div>
+        <div class="fit"><b>${fa(c.score)}٪</b><span>انطباق با تو</span></div>
+      </div>
+      <div class="sched">${sched}</div>
+      <div class="why">${c.why}</div>
+      <button class="btn primary" data-pick="${c.id}">✅ انتخاب این برنامه</button>
+    </div>`;
+  }).join("");
+  document.querySelectorAll("[data-pick]").forEach(b=>{
+    b.addEventListener("click", ()=> chooseProgram(b.dataset.pick));
+  });
+}
+function chooseProgram(candId){
+  profile.age=wState.age; profile.height=wState.height; profile.weight=wState.weight;
+  profile.sex=wState.sex; profile.goal=wState.goal; profile.exp=wState.exp;
+  profile.dayIdx=(wState.dayIdx||[]).slice(); profile.days=profile.dayIdx.length;
+  const p = buildPlan(candId);
+  if(!p){ toast("ساخت برنامه ناموفق بود 😅"); return; }
+  profile.programId = candId;
+  body.weight = wState.weight; body.height = wState.height;
+  PLAN = p.days; PLAN._progName = p.name;
+  done = {prog:candId, map:{}};
+  jsave(LS_PROFILE,profile); jsave(LS_BODY,body); jsave(LS_DONE,done);
+  activeDay = todayId();
+  wizClose();
+  renderAll();
+  toast(`برنامه «${p.name}» فعال شد 💪`);
+}
+
+/* ================= ۱۲) ریست امروز / Toast / چیپ تاریخ ================= */
+document.getElementById("resetDayBtn").addEventListener("click", ()=>{
+  const id = todayId();
+  if(!done.map[id] || !done.map[id].length){ toast("چیزی برای ریست نیست 🙂"); return; }
+  delete done.map[id];
+  jsave(LS_DONE,done);
+  if(activeDay===id) renderDayPanel();
+  renderDays(); renderWeek();
+  toast("تیک‌های امروز پاک شد ↺");
+});
+
+let toastTimer=null;
+function toast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg; t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove("show"),2600);
+}
+function renderTodayChip(){
+  const now=new Date();
+  const d=dayById(todayId());
+  const dateStr=now.toLocaleDateString("fa-IR",{weekday:"long",day:"numeric",month:"long"});
+  document.getElementById("todayChip").innerHTML=`📅 ${dateStr}${d?` · <b>${d.name}</b>`:""}`;
+}
+
+/* ================= ۱۳) تایمر استراحت + نقشه عضلات ================= */
+const LS_REST="gympro.rest.v1", LS_MUS="gympro.muscles.v1";
+const MUSCLES = {
+  chest:{fa:"سینه",rec:48}, back:{fa:"زیربغل و کول",rec:60}, shoulders:{fa:"سرشانه",rec:48},
+  biceps:{fa:"جلوبازو",rec:36}, triceps:{fa:"پشت‌بازو",rec:36}, quads:{fa:"جلوران",rec:48},
+  hams:{fa:"پشت‌ران",rec:60}, glutes:{fa:"باسن",rec:60}, calves:{fa:"ساق پا",rec:24}, abs:{fa:"شکم و مرکزی",rec:24},
+};
+let muscles = jload(LS_MUS, {});
+
+function musStatus(m){
+  const ts = muscles[m];
+  if(!ts) return {k:"none", c:"#22382c", t:"بدون سابقه"};
+  const h=(Date.now()-ts)/36e5, rec=MUSCLES[m].rec;
+  if(h<rec*0.5)  return {k:"tired", c:"#ef4444", t:"خسته — ریکاوری سنگین"};
+  if(h<rec)      return {k:"rec",   c:"#fb923c", t:"در حال ریکاوری"};
+  if(h<rec*1.5)  return {k:"soon",  c:"#a3e635", t:"تقریباً آماده"};
+  return {k:"ready", c:"#22c55e", t:"آماده 💚"};
+}
+function agoTxt(ts){
+  const h=(Date.now()-ts)/36e5;
+  if(h<1) return "همین حالا";
+  if(h<24) return fa(Math.round(h))+" ساعت پیش";
+  const dd=Math.floor(h/24);
+  return dd===1 ? "دیروز" : fa(dd)+" روز پیش";
+}
+function renderMuscles(){
+  document.querySelectorAll("[data-m]").forEach(el=>{
+    const st = musStatus(el.dataset.m);
+    el.setAttribute("fill", st.c);
+    el.style.filter  = st.k==="ready" ? "drop-shadow(0 0 5px rgba(34,197,94,.7))" : "";
+    el.style.opacity = st.k==="none" ? ".55" : "1";
+  });
+  const gs = Object.keys(MUSCLES);
+  const ready = gs.filter(g=>["ready","soon"].includes(musStatus(g).k)).length;
+  const rec   = gs.filter(g=>["rec","tired"].includes(musStatus(g).k)).length;
+  document.getElementById("musSum").innerHTML =
+    `<span>💚 آماده: ${fa(ready)}</span><span>🟠 ریکاوری: ${fa(rec)}</span>`;
+}
+document.querySelectorAll("[data-m]").forEach(el=>{
+  el.addEventListener("click", ()=>{
+    const m=el.dataset.m, st=musStatus(m), ts=muscles[m];
+    document.getElementById("musInfo").innerHTML = ts
+      ? `<b>${MUSCLES[m].fa}</b> — ${st.t} · آخرین تمرین: ${agoTxt(ts)} · مدل ریکاوری: ${fa(MUSCLES[m].rec)} ساعت`
+      : `<b>${MUSCLES[m].fa}</b> — هنوز در این دستگاه ثبت نشده`;
+  });
+});
+setInterval(renderMuscles, 60000);   // با گذشت زمان رنگ‌ها تازه می‌شوند
+
+/* ---------- تایمر استراحت ---------- */
+let rest={end:0,total:0,label:""}, restTick=null;
+const dock=document.getElementById("restDock");
+const R_C=2*Math.PI*27;
+const fd=x=>String(x).replace(/\d/g,d=>"۰۱۲۳۴۵۶۷۸۹"[+d]);
+function fmt(s){ s=Math.max(0,Math.ceil(s)); return fd(Math.floor(s/60))+":"+fd(String(s%60).padStart(2,"0")); }
+
+function startRest(sec,label){
+  rest={end:Date.now()+sec*1000, total:sec, label:label||"ست بعدی"};
+  jsave(LS_REST,rest);
+  dock.classList.add("show"); dock.classList.remove("done");
+  document.getElementById("rLabel").textContent=rest.label;
+  tickRest(); clearInterval(restTick); restTick=setInterval(tickRest,250);
+}
+function tickRest(){
+  const rem=(rest.end-Date.now())/1000;
+  const fg=document.getElementById("rFg");
+  fg.setAttribute("stroke-dasharray",R_C.toFixed(1));
+  fg.setAttribute("stroke-dashoffset",(R_C*(1-Math.max(0,Math.min(1,rem/rest.total)))).toFixed(1));
+  document.getElementById("rTime").textContent = rem>0 ? fmt(rem) : "برو!";
+  if(rem<=0) finishRest();
+}
+function finishRest(){
+  clearInterval(restTick);
+  dock.classList.add("done");
+  document.getElementById("rTime").textContent="برو!";
+  beep(); vibrate();
+  toast("⏱ استراحت تمام شد — ست بعدی 💪");
+  try{ localStorage.removeItem(LS_REST); }catch(e){}
+  setTimeout(()=>dock.classList.remove("show","done"),4000);
+}
+function closeRest(){
+  clearInterval(restTick);
+  dock.classList.remove("show","done");
+  try{ localStorage.removeItem(LS_REST); }catch(e){}
+}
+document.getElementById("rAdd").addEventListener("click", ()=>{ rest.end+=15000; tickRest(); jsave(LS_REST,rest); });
+document.getElementById("rSkip").addEventListener("click", finishRest);
+document.getElementById("rClose").addEventListener("click", closeRest);
+
+let actx=null;
+function beep(){ // سه‌نتی صعودی با WebAudio — کاملاً آفلاین
+  try{
+    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    const t=actx.currentTime;
+    [[784,0],[988,.16],[1319,.32]].forEach(([f,d])=>{
+      const o=actx.createOscillator(), g=actx.createGain();
+      o.type="sine"; o.frequency.value=f;
+      g.gain.setValueAtTime(.0001,t+d);
+      g.gain.exponentialRampToValueAtTime(.22,t+d+.02);
+      g.gain.exponentialRampToValueAtTime(.0001,t+d+.16);
+      o.connect(g); g.connect(actx.destination);
+      o.start(t+d); o.stop(t+d+.18);
+    });
+  }catch(e){}
+}
+function vibrate(){ try{ navigator.vibrate && navigator.vibrate([120,60,120]); }catch(e){} }
+
+/* بازگردانی تایمر پس از رفرش صفحه */
+const savedRest = jload(LS_REST, null);
+if(savedRest && savedRest.end>Date.now() && savedRest.total){
+  rest=savedRest;
+  dock.classList.add("show");
+  document.getElementById("rLabel").textContent=rest.label;
+  tickRest(); clearInterval(restTick); restTick=setInterval(tickRest,250);
+}
+
+/* ================= ۱۴) PWA: سرویس‌ورکر + دکمۀ نصب ================= */
+let deferredPrompt = null;
+const installBtn = document.getElementById("installBtn");
+window.addEventListener("beforeinstallprompt", e=>{
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = "";
+});
+installBtn.addEventListener("click", ()=>{
+  if(!deferredPrompt){ toast("از منوی مرورگر: Add to Home Screen 📲"); return; }
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(()=>{ deferredPrompt = null; installBtn.style.display = "none"; });
+});
+window.addEventListener("appinstalled", ()=>{
+  installBtn.style.display = "none";
+  toast("GYM PRO نصب شد — حالا یک اپ واقعی است 🎉");
+});
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+  navigator.serviceWorker.register("sw.js")
+    .then(()=> console.log("GYM PRO · سرویس‌ورکر فعال — آفلاین کامل"))
+    .catch(err=> console.warn("SW:", err && err.message));
+}
+
+/* ================= ۱۵) شروع ================= */
+if(profile.programId){
+  const p = buildPlan(profile.programId);
+  if(p){ PLAN = p.days; PLAN._progName = p.name; }
+}
+if(PLAN.length){
+  activeDay = todayId();
+  renderAll();
+}else{
+  renderStats(); renderTodayChip();
+  wizOpen(1);   // اولین بازدید: پرسشنامه باز می‌شود
+}
+</script>
+</body>
+</html>
