@@ -1,7 +1,7 @@
 /* GYM PRO — سرویس‌ورکر: کش اول (آفلاین کامل)
    توجه: فقط روی http/https (از جمله localhost) فعال می‌شود؛ روی file:// لازم نیست
    چون خودِ فایل از قبل آفلاین است. */
-const CACHE = "gympro-v6";
+const CACHE = "gympro-v7";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon.svg", "./icons/icon-maskable.svg"];
 
 self.addEventListener("install", e => {

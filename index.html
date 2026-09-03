@@ -205,6 +205,23 @@ body.coach-open #restDock{display:none}
   .coach-ex{font-size:1.15rem}
 }
 
+/* ========== پنجره تازه‌ها ========== */
+#whatsNew{position:fixed;inset:0;z-index:112;display:none;background:rgba(4,8,6,.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:16px}
+#whatsNew.open{display:flex}
+.wn{width:min(540px,100%);max-height:88vh;overflow-y:auto;background:linear-gradient(170deg,var(--panel),var(--bg2));border:1px solid rgba(34,197,94,.35);border-radius:24px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.wn h2{font-size:1.1rem;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.wn .wn-sub{font-size:.72rem;color:var(--muted);margin-bottom:14px}
+.wn-entry{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.wn-entry.new{border-color:rgba(34,197,94,.5);box-shadow:var(--glow)}
+.wn-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.wn-v{font-size:.68rem;font-weight:800;background:linear-gradient(135deg,var(--lime),var(--green));color:#12220a;border-radius:999px;padding:1px 10px}
+.wn-date{font-size:.68rem;color:var(--muted)}
+.wn-title{font-size:.9rem;font-weight:700;color:var(--green2);width:100%}
+.wn-entry ul{margin:4px 16px 0 0;padding:0}
+.wn-entry li{font-size:.76rem;color:var(--muted);margin-bottom:3px;list-style:none;position:relative;padding-right:12px}
+.wn-entry li::before{content:"";position:absolute;right:0;top:.55em;width:5px;height:5px;border-radius:50%;background:var(--green2)}
+.wn-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:6px}
+
 /* ========== نقشه حرارتی عضلات ========== */
 .mus-wrap{background:linear-gradient(160deg,var(--card),var(--panel));border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow)}
 .mus-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
@@ -458,7 +475,8 @@ footer b{color:var(--green2)}
 </main>
 
 <footer>
-  <b>GYM PRO</b> نسخه ۶ · PWA آفلاین — پرسشنامه، برنامه و پیشرفت فقط در مرورگر همین دستگاه (localStorage) نگه‌داشته می‌شوند. قابل نصب با دکمۀ «📲 نصب اپ».
+  <button class="btn" id="whatsNewBtn" type="button" style="margin-bottom:10px">📣 تازه‌ها و بروزرسانی‌ها</button><br>
+  <b>GYM PRO</b> نسخه ۷ · PWA آفلاین — پرسشنامه، برنامه و پیشرفت فقط در مرورگر همین دستگاه (localStorage) نگه‌داشته می‌شوند. قابل نصب با دکمۀ «📲 نصب اپ».
 </footer>
 
 <!-- ================= دستیار گام‌به‌گام (کوچ) ================= -->
@@ -523,6 +541,19 @@ footer b{color:var(--green2)}
     <button id="rAdd" type="button" title="۱۵ ثانیه اضافه">+۱۵</button>
     <button id="rSkip" type="button" class="rd-skip" title="رد کردن استراحت">⏭</button>
     <button id="rClose" type="button" title="بستن">✕</button>
+  </div>
+</div>
+
+<!-- ================= پنجره تازه‌ها ================= -->
+<div id="whatsNew" role="dialog" aria-modal="true">
+  <div class="wn">
+    <h2>📣 چه چیزهایی تازه است؟</h2>
+    <div class="wn-sub" id="wnSub">—</div>
+    <div id="wnList"></div>
+    <div class="wn-foot">
+      <span class="wn-date" id="wnVer">GYM PRO · نسخه ۷</span>
+      <button class="btn primary" id="wnOk" type="button">متوجه شدم ✅</button>
+    </div>
   </div>
 </div>
 
@@ -1483,7 +1514,67 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){
     .catch(err=> console.warn("SW:", err && err.message));
 }
 
-/* ================= ۱۶) شروع ================= */
+/* ================= ۱۶) پنجره تازه‌ها (What's New) ================= */
+const LS_SEEN = "gympro.seen.v1";
+const APP_VERSION = 7;
+const CHANGELOG = [
+  {v:7, date:"۱۴۰۵/۰۶/۱۲", title:"اعلان تازه‌ها", items:[
+    "پنجره «چه تازه است» بعد از هر بروزرسانی، در اولین ورود خودکار باز می‌شود",
+    "دکمۀ «📣 تازه‌ها» در پاورقی برای مرور تاریخچه کامل نسخه‌ها",
+    "تاریخ بروزرسانی کنار هر نسخه",
+  ]},
+  {v:6, date:"۱۴۰۵/۰۶/۱۲", title:"دستیار گام‌به‌گام تمرین", items:[
+    "دکمۀ «▶ حالت تمرین» — کوچ تمام‌صفحه، ست‌به‌ست",
+    "گفتار فارسی آفلاین: اعلام حرکت، ست و استراحت",
+    "حلقۀ استراحت بزرگ با +۱۵ ثانیه و رد استراحت",
+    "ثبت خودکار حرکت‌ها در پیشرفت و نقشۀ عضلات",
+  ]},
+  {v:5, date:"۱۴۰۵/۰۶/۱۲", title:"آیکون جدید", items:[
+    "هالتر کروم + نبض سبز — هم در اپ نصب‌شده، هم favicon",
+  ]},
+  {v:4, date:"۱۴۰۵/۰۶/۱۱", title:"تایمر استراحت + نقشۀ عضلات", items:[
+    "تایمر خودکار هنگام تیک‌زدن، با بوق و لرزش",
+    "نقشۀ حرارتی بدن (جلو/پشت) با وضعیت ریکاوری هر عضله",
+  ]},
+  {v:3, date:"۱۴۰۵/۰۶/۱۱", title:"PWA — نصب و آفلاین کامل", items:[
+    "نصب روی گوشی و دسکتاپ با دکمۀ «📲 نصب اپ»",
+    "سرویس‌ورکر: بدون اینترنت هم کامل کار می‌کند",
+  ]},
+  {v:2, date:"۱۴۰۵/۰۶/۱۱", title:"پرسشنامه و پیشنهاد برنامه", items:[
+    "۳ برنامۀ پیشنهادی با درصد انطباق — انتخاب آزاد",
+    "انتخاب روزهای واقعی هفته (۲ تا ۶ روز)",
+  ]},
+  {v:1, date:"۱۴۰۵/۰۶/۱۱", title:"نسخۀ اول GYM PRO", items:[
+    "برنامۀ هفتگی، اطلاعات بدنی، پیشرفت روز و هفته",
+  ]},
+];
+function openWhatsNew(sinceV){
+  const entries = CHANGELOG.filter(c => c.v > (sinceV||0));
+  document.getElementById("wnSub").textContent = sinceV>0
+    ? "این‌ها از آخرین بازدیدت اضافه شده 💚"
+    : "تاریخچۀ کامل نسخه‌ها";
+  document.getElementById("wnList").innerHTML = entries.map((c,i)=>`
+    <div class="wn-entry ${i===0?"new":""}">
+      <div class="wn-head">
+        <span class="wn-v">نسخه ${fa(c.v)}</span>
+        <span class="wn-date">${c.date}</span>
+        <span class="wn-title">${c.title}</span>
+      </div>
+      <ul>${c.items.map(it=>`<li>${it}</li>`).join("")}</ul>
+    </div>`).join("");
+  document.getElementById("whatsNew").classList.add("open");
+  document.body.classList.add("locked");
+}
+function closeWhatsNew(){
+  document.getElementById("whatsNew").classList.remove("open");
+  document.body.classList.remove("locked");
+  jsave(LS_SEEN, APP_VERSION);
+}
+document.getElementById("wnOk").addEventListener("click", closeWhatsNew);
+document.getElementById("whatsNew").addEventListener("click", e=>{ if(e.target.id==="whatsNew") closeWhatsNew(); });
+document.getElementById("whatsNewBtn").addEventListener("click", ()=> openWhatsNew(0));
+
+/* ================= ۱۷) شروع ================= */
 if(profile.programId){
   const p = buildPlan(profile.programId);
   if(p){ PLAN = p.days; PLAN._progName = p.name; }
@@ -1494,6 +1585,15 @@ if(PLAN.length){
 }else{
   renderStats(); renderTodayChip();
   wizOpen(1);   // اولین بازدید: پرسشنامه باز می‌شود
+}
+/* اعلان تازه‌ها: فقط برای کاربرِ بازگشته که نسخه جدید آمده */
+let seenRaw = null;
+try{ seenRaw = localStorage.getItem(LS_SEEN); }catch(e){}
+if(seenRaw === null){
+  if(profile.programId) openWhatsNew(0);      // کاربر قدیمی پیش از این قابلیت
+  else jsave(LS_SEEN, APP_VERSION);           // نصب تازه: مزاحمت نکن
+}else if((parseInt(seenRaw,10)||0) < APP_VERSION){
+  openWhatsNew(parseInt(seenRaw,10)||0);
 }
 </script>
 </body>
