@@ -220,6 +220,11 @@ body.coach-open #restDock{display:none}
   .coach-card{border-radius:22px;padding:14px}
   .coach-ex{font-size:1.15rem}
 }
+.coach-voice{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;flex-wrap:wrap}
+.coach-voice span{font-size:.7rem;color:var(--muted)}
+.coach-voice select{background:var(--card);color:var(--text);border:1px solid var(--line2);border-radius:999px;padding:5px 12px;font-family:inherit;font-size:.74rem;max-width:175px}
+.coach-voice-hint{font-size:.66rem;color:#fbbf24;line-height:1.7;margin-top:8px;display:none;padding:0 6px}
+.coach-voice-hint.show{display:block}
 
 /* ========== پنجره تازه‌ها ========== */
 #whatsNew{position:fixed;inset:0;z-index:112;display:none;background:rgba(4,8,6,.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:16px}
@@ -493,7 +498,7 @@ footer b{color:var(--green2)}
 
 <footer>
   <button class="btn" id="whatsNewBtn" type="button" style="margin-bottom:10px">📣 تازه‌ها و بروزرسانی‌ها</button><br>
-  <b>GYM PRO</b> نسخه ۸ · PWA آفلاین — پرسشنامه، برنامه و پیشرفت فقط در مرورگر همین دستگاه (localStorage) نگه‌داشته می‌شوند. قابل نصب با دکمۀ «📲 نصب اپ».
+  <b>GYM PRO</b> نسخه ۹ · PWA آفلاین — پرسشنامه، برنامه و پیشرفت فقط در مرورگر همین دستگاه (localStorage) نگه‌داشته می‌شوند. قابل نصب با دکمۀ «📲 نصب اپ».
 </footer>
 
 <!-- ================= دستیار گام‌به‌گام (کوچ) ================= -->
@@ -526,6 +531,13 @@ footer b{color:var(--green2)}
         <b id="coachTime">۰:۰۰</b>
       </div>
       <div class="coach-next" id="coachNext">—</div>
+      <div class="coach-voice">
+        <span>صدای خواندن:</span>
+        <select id="coachVoiceSel"><option>— خودکار —</option></select>
+      </div>
+      <div class="coach-voice-hint" id="coachVoiceHint">صدای فارسی در این دستگاه پیدا نشد — از تنظیمات سیستم یک صدای فارسی فعال کن:
+مک: System Settings → Accessibility → Spoken Content → System Voice → Manage Voices → Persian (دانلود).
+ویندوز: Settings → Time & Language → Speech → Add Persian. اندروید/iOS: معمولاً فارسی پیش‌فرض دارند.</div>
       <div class="coach-sets" id="coachSets"></div>
       <div class="coach-total" id="coachPos">۰/۰ ست</div>
     </div>
@@ -1355,19 +1367,45 @@ const coachEl = document.getElementById("coach");
 let coach = null;   // {dayId, exIdx, setIdx, phase: work|rest|done, restEnd, restTotal}
 let coachTick = null;
 let voiceOn = true;
-
-function speak(txt){ // گفتار فارسی — آفلاین با صدای سیستمی
+let voicePref = (()=>{ try{ return localStorage.getItem("gympro.voice.v1")||""; }catch(e){ return ""; } })();
+let voicesCache = [];
+function isFa(v){ return /^fa/i.test(v.lang||"") || /persian|فارس|فارسی/i.test(v.name||""); }
+function loadVoices(){
+  if(!window.speechSynthesis) return;
+  try{ voicesCache = window.speechSynthesis.getVoices() || []; }catch(e){ voicesCache=[]; }
+  fillVoiceSel();
+}
+function pickVoice(){
+  if(voicePref){ const m = voicesCache.find(v=>v.name===voicePref); if(m) return m; }
+  const fa = voicesCache.filter(isFa);
+  if(!fa.length) return null;
+  const q = n => /google|natural|premium|neural|enhanced/i.test(n) ? 1 : 0;
+  fa.sort((a,b)=> q(b.name)-q(a.name));
+  return fa[0];
+}
+function fillVoiceSel(){
+  const sel = document.getElementById("coachVoiceSel"); if(!sel) return;
+  const esc = x => String(x).replace(/"/g,"&quot;");
+  const sorted = [...voicesCache].sort((a,b)=> (isFa(b)?1:0)-(isFa(a)?1:0));
+  sel.innerHTML = '<option value="">— خودکار (فارسی) —</option>' +
+    sorted.map(v=>`<option value="${esc(v.name)}">${(isFa(v)?"🗣️ ":"")+esc(v.name)}</option>`).join("");
+  if(voicePref) sel.value = voicePref;
+  const hint = document.getElementById("coachVoiceHint");
+  if(hint) hint.classList.toggle("show", voicesCache.length>0 && !voicesCache.some(isFa));
+}
+function speak(txt){ // گفتار فارسی — آفلاین، با صدای فارسی دستگاه
   if(!voiceOn) return;
   try{
     if(!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(txt);
-    u.lang = "fa-IR"; u.rate = 1;
-    const fv = window.speechSynthesis.getVoices().find(v=>/^fa/i.test(v.lang||""));
-    if(fv) u.voice = fv;
+    u.lang = "fa-IR"; u.rate = 0.98; u.pitch = 1;
+    const v = pickVoice();
+    if(v) u.voice = v;
     window.speechSynthesis.speak(u);
   }catch(e){}
 }
+try{ if(window.speechSynthesis){ loadVoices(); window.speechSynthesis.onvoiceschanged = loadVoices; } }catch(e){}
 function coachEx(){ return coach ? (dayById(coach.dayId).ex||[])[coach.exIdx] || null : null; }
 function coachDay(){ return dayById(coach.dayId); }
 
@@ -1499,6 +1537,12 @@ document.getElementById("coachVoice").addEventListener("click", ()=>{
   if(voiceOn) announceSet();
   else try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(e){}
 });
+const coachVoiceSel = document.getElementById("coachVoiceSel");
+if(coachVoiceSel) coachVoiceSel.addEventListener("change", ()=>{
+  voicePref = coachVoiceSel.value;
+  try{ localStorage.setItem("gympro.voice.v1", voicePref); }catch(e){}
+  if(voiceOn) announceSet();
+});
 document.getElementById("coachDone").addEventListener("click", ()=>{
   if(coach && coach.phase==="done") closeCoach();
   else coachSetDone();
@@ -1533,8 +1577,14 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){
 
 /* ================= ۱۶) پنجره تازه‌ها (What's New) ================= */
 const LS_SEEN = "gympro.seen.v1";
-const APP_VERSION = 8;
+const APP_VERSION = 9;
 const CHANGELOG = [
+  {v:9, date:"۱۴۰۵/۰۶/۱۲", title:"صدای فارسی 🗣️", items:[
+    "انتخاب خودکار باکیفیت‌ترین صدای فارسی دستگاه (Google/Natural/Neural اولویت)",
+    "انتخاب‌گر دستی صدا داخل کوچ + ذخیره در دستگاه",
+    "راهنمای فعال‌سازی صدای فارسی در سیستم‌عامل وقتی صدا پیدا نشد",
+    "بارگذاری صحیح لیست صداها (رویداد voiceschanged) — رفع صدای انگلیسی",
+  ]},
   {v:8, date:"۱۴۰۵/۰۶/۱۲", title:"طراحی مدرن‌تر 💎", items:[
     "گلس‌مورفیزم: کارت‌ها و پنل‌ها نیمه‌شفاف با بلور و هایلایت بالا",
     "هاله‌های محیطی سبز/لیمو + گرید ظریف در پس‌زمینه",
