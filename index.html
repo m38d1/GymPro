@@ -172,6 +172,39 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
   background:var(--bg2);color:var(--green2);display:grid;place-items:center;font-size:.95rem;cursor:pointer;transition:.2s;font-family:inherit}
 .ex .ex-t:hover{border-color:var(--green);box-shadow:var(--glow)}
 
+/* ========== دستیار گام‌به‌گام (کوچ) ========== */
+#coach{position:fixed;inset:0;z-index:108;display:none;background:rgba(4,8,6,.87);backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:16px}
+#coach.open{display:flex}
+.coach-card{width:min(480px,100%);max-height:94vh;overflow-y:auto;background:linear-gradient(170deg,var(--panel),var(--bg2));border:1px solid rgba(34,197,94,.35);border-radius:28px;padding:18px;box-shadow:0 24px 70px rgba(0,0,0,.65),var(--glow)}
+.coach-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.coach-day{font-size:.8rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.coach-bar{height:8px;background:#0a130e;border:1px solid var(--line);border-radius:99px;overflow:hidden;margin:14px 0 4px}
+.coach-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#0f7a3d,var(--green) 55%,var(--lime));border-radius:99px;transition:width .4s;box-shadow:0 0 10px rgba(34,197,94,.5)}
+.coach-body{text-align:center;padding:16px 6px 6px}
+.coach-ex{font-size:1.4rem;font-weight:800;line-height:1.4;margin-bottom:8px}
+.coach-meta{display:flex;justify-content:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.coach-ring{position:relative;width:150px;height:150px;margin:6px auto 10px;display:none}
+.coach-ring.show{display:block}
+.coach-ring svg{width:150px;height:150px;transform:rotate(-90deg)}
+.coach-ring circle{fill:none;stroke-width:11;stroke-linecap:round}
+.coach-ring .cbg{stroke:#0a130e}
+.coach-ring .cfg{stroke:url(#gradCoach);transition:stroke-dashoffset .25s linear}
+.coach-ring b{position:absolute;inset:0;display:grid;place-items:center;font-size:1.7rem;color:var(--green2);font-variant-numeric:tabular-nums}
+.coach-next{font-size:.78rem;color:var(--muted);min-height:22px;margin-bottom:8px}
+.coach-sets{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-bottom:6px}
+.coach-sets i{font-style:normal;font-size:.68rem;min-width:30px;padding:4px 8px;border-radius:9px;background:var(--card);border:1.5px solid var(--line);color:var(--muted)}
+.coach-sets i.on{border-color:var(--green);color:var(--green2);background:rgba(34,197,94,.12);box-shadow:var(--glow)}
+.coach-sets i.full{border-color:var(--green);background:var(--green);color:#04150b;font-weight:700}
+.coach-total{font-size:.72rem;color:var(--muted);margin-top:2px}
+.coach-actions{display:flex;gap:10px;margin-top:16px}
+.coach-actions .btn{font-size:.82rem}
+.coach-big{flex:1;justify-content:center;padding:14px;font-size:.95rem;border-radius:14px}
+body.coach-open #restDock{display:none}
+@media (max-width:480px){
+  .coach-card{border-radius:22px;padding:14px}
+  .coach-ex{font-size:1.15rem}
+}
+
 /* ========== نقشه حرارتی عضلات ========== */
 .mus-wrap{background:linear-gradient(160deg,var(--card),var(--panel));border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow)}
 .mus-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
@@ -425,8 +458,49 @@ footer b{color:var(--green2)}
 </main>
 
 <footer>
-  <b>GYM PRO</b> نسخه ۵ · PWA آفلاین — پرسشنامه، برنامه و پیشرفت فقط در مرورگر همین دستگاه (localStorage) نگه‌داشته می‌شوند. قابل نصب با دکمۀ «📲 نصب اپ».
+  <b>GYM PRO</b> نسخه ۶ · PWA آفلاین — پرسشنامه، برنامه و پیشرفت فقط در مرورگر همین دستگاه (localStorage) نگه‌داشته می‌شوند. قابل نصب با دکمۀ «📲 نصب اپ».
 </footer>
+
+<!-- ================= دستیار گام‌به‌گام (کوچ) ================= -->
+<div id="coach" role="dialog" aria-modal="true">
+  <div class="coach-card">
+    <div class="coach-top">
+      <button class="btn" id="coachClose" type="button" title="خروج">✕</button>
+      <div class="coach-day" id="coachDay">—</div>
+      <button class="btn" id="coachVoice" type="button" title="صدا روشن/خاموش">🔊</button>
+    </div>
+    <div class="coach-bar"><i id="coachBar" style="width:0%"></i></div>
+    <div class="coach-body">
+      <div class="coach-ex" id="coachEx">—</div>
+      <div class="coach-meta">
+        <span id="coachSet" class="chip">—</span>
+        <span id="coachReps" class="chip">—</span>
+      </div>
+      <div class="coach-ring" id="coachRing">
+        <svg viewBox="0 0 140 140">
+          <defs>
+            <linearGradient id="gradCoach" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#0f7a3d"/>
+              <stop offset="60%" stop-color="#22c55e"/>
+              <stop offset="100%" stop-color="#a3e635"/>
+            </linearGradient>
+          </defs>
+          <circle class="cbg" cx="70" cy="70" r="62"/>
+          <circle class="cfg" id="coachFg" cx="70" cy="70" r="62" stroke-dasharray="389.6" stroke-dashoffset="389.6"/>
+        </svg>
+        <b id="coachTime">۰:۰۰</b>
+      </div>
+      <div class="coach-next" id="coachNext">—</div>
+      <div class="coach-sets" id="coachSets"></div>
+      <div class="coach-total" id="coachPos">۰/۰ ست</div>
+    </div>
+    <div class="coach-actions">
+      <button class="btn" id="coachAdd15" type="button">+۱۵</button>
+      <button class="btn primary coach-big" id="coachDone" type="button">✅ ست تمام</button>
+      <button class="btn coach-big" id="coachSkipRest" type="button" style="display:none">⏭ رد استراحت</button>
+    </div>
+  </div>
+</div>
 
 <!-- ================= داک تایمر استراحت ================= -->
 <div id="restDock" role="status">
@@ -867,6 +941,7 @@ function renderDayPanel(){
     <div class="day-head">
       <h2>${d.name} — ${d.focus} <span class="badge">${fa(d.ex.length)} حرکت</span></h2>
       <span class="goal">ست‌ها: <b style="color:var(--green2)">${fa(doneSets)}</b> / ${fa(totalSets)}</span>
+      <button class="btn primary" type="button" id="coachBtn">▶ حالت تمرین</button>
     </div>
     <div class="progress-wrap">
       <div class="progress-meta"><span>پیشرفت تمرین امروز</span><b id="dayPct">${faPct(pct)}</b></div>
@@ -906,6 +981,8 @@ function renderDayPanel(){
   panel.querySelectorAll(".ex-t").forEach(b=>{
     b.addEventListener("click", ev=>{ ev.stopPropagation(); startRest(+b.dataset.rest, b.dataset.n); });
   });
+  const cb = panel.querySelector("#coachBtn");
+  if(cb) cb.addEventListener("click", ()=> openCoach(d.id));
 }
 
 function renderWeek(){
@@ -1225,7 +1302,165 @@ if(savedRest && savedRest.end>Date.now() && savedRest.total){
   tickRest(); clearInterval(restTick); restTick=setInterval(tickRest,250);
 }
 
-/* ================= ۱۴) PWA: سرویس‌ورکر + دکمۀ نصب ================= */
+/* ================= ۱۴) دستیار گام‌به‌گام تمرین (کوچ) ================= */
+const coachEl = document.getElementById("coach");
+let coach = null;   // {dayId, exIdx, setIdx, phase: work|rest|done, restEnd, restTotal}
+let coachTick = null;
+let voiceOn = true;
+
+function speak(txt){ // گفتار فارسی — آفلاین با صدای سیستمی
+  if(!voiceOn) return;
+  try{
+    if(!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(txt);
+    u.lang = "fa-IR"; u.rate = 1;
+    const fv = window.speechSynthesis.getVoices().find(v=>/^fa/i.test(v.lang||""));
+    if(fv) u.voice = fv;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+function coachEx(){ return coach ? (dayById(coach.dayId).ex||[])[coach.exIdx] || null : null; }
+function coachDay(){ return dayById(coach.dayId); }
+
+function markExDone(dayId, idx){ // فقط علامت‌زدن (بدون برداشتن)
+  const d = dayById(dayId);
+  if(!d || !d.ex || !d.ex[idx]) return;
+  let list = doneList(dayId);
+  if(!list.includes(idx)){ list.push(idx); done.map[dayId] = list; jsave(LS_DONE, done); }
+  const m = d.ex[idx].m;
+  if(m && MUSCLES[m]){ muscles[m] = Date.now(); jsave(LS_MUS, muscles); }
+  renderMuscles(); renderDays(); renderWeek();
+  if(activeDay===dayId) renderDayPanel();
+}
+
+function openCoach(dayId){
+  const d = dayById(dayId);
+  if(!d || !d.ex || !d.ex.length) return;
+  coach = {dayId, exIdx:0, setIdx:0, phase:"work", restEnd:0, restTotal:0};
+  coachEl.classList.add("open");
+  document.body.classList.add("locked","coach-open");
+  clearInterval(coachTick);
+  renderCoach();
+  announceSet();
+}
+function closeCoach(){
+  clearInterval(coachTick);
+  coach = null;
+  coachEl.classList.remove("open");
+  document.body.classList.remove("locked","coach-open");
+  try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(e){}
+}
+function announceSet(){
+  const c=coach, ex=coachEx();
+  if(!c || !ex) return;
+  const reps = String(ex.r).replace(/-/g," تا ");
+  speak(`حرکت: ${ex.n}، ست ${fa(c.setIdx+1)} از ${fa(ex.s)}، ${reps} تکرار`);
+}
+function coachSetDone(){
+  const c=coach, d=coachDay();
+  if(!c || c.phase!=="work") return;
+  const ex=coachEx();
+  c.setIdx++;
+  if(c.setIdx>=ex.s){           // حرکت تمام شد
+    markExDone(c.dayId, c.exIdx);
+    c.exIdx++; c.setIdx=0;
+    if(c.exIdx>=d.ex.length){ finishCoach(); return; }
+  }
+  c.phase="rest";
+  c.restTotal = coachEx().rest;
+  c.restEnd = Date.now()+c.restTotal*1000;
+  beep(); vibrate();
+  speak(`آفرین! ${fa(c.restTotal)} ثانیه استراحت. حرکت بعدی: ${coachEx().n}`);
+  clearInterval(coachTick);
+  coachTick = setInterval(tickCoach, 250);
+  renderCoach();
+  tickCoach();   // نمایش فوری شمارش، بدون انتظار برای تیک اول
+}
+function coachSkipRest(){
+  if(!coach || coach.phase!=="rest") return;
+  clearInterval(coachTick);
+  coach.phase="work";
+  beep(); vibrate();
+  renderCoach();
+  announceSet();
+}
+function tickCoach(){
+  const c=coach;
+  if(!c || c.phase!=="rest") return;
+  const rem=(c.restEnd-Date.now())/1000;
+  const C=2*Math.PI*62;
+  const fg=document.getElementById("coachFg");
+  fg.setAttribute("stroke-dasharray",C.toFixed(1));
+  fg.setAttribute("stroke-dashoffset",(C*(1-Math.max(0,Math.min(1,rem/c.restTotal)))).toFixed(1));
+  document.getElementById("coachTime").textContent = rem>0 ? fmt(rem) : "۰:۰۰";
+  if(rem<=0){
+    clearInterval(coachTick);
+    c.phase="work";
+    beep(); vibrate();
+    speak("وقت ست بعدی!");
+    renderCoach();
+    announceSet();
+  }
+}
+function finishCoach(){
+  clearInterval(coachTick);
+  coach.phase="done";
+  speak("تبریک! تمرین امروز کامل شد. آفرین!");
+  renderCoach();
+  toast("🎉 تمرین کامل شد — آفرین!");
+}
+function renderCoach(){
+  const c=coach; if(!c) return;
+  const d=coachDay(), ex=coachEx();
+  const el=id=>document.getElementById(id);
+  el("coachDay").textContent = `${d.name} — ${d.focus}`;
+  const totalSets = d.ex.reduce((a,e)=>a+e.s,0);
+  const doneSets = d.ex.slice(0,Math.min(c.exIdx,d.ex.length)).reduce((a,e)=>a+e.s,0) + (c.phase==="work"?c.setIdx:0);
+  el("coachBar").style.width = (totalSets?doneSets/totalSets*100:0)+"%";
+  el("coachPos").textContent = `${fa(doneSets)}/${fa(totalSets)} ست`;
+  el("coachSets").innerHTML = d.ex.map((e,i)=>{
+    const on = i===c.exIdx && c.phase!=="done";
+    const full = doneList(c.dayId).includes(i);
+    return `<i class="${on?"on":""} ${full?"full":""}">${fa(e.s)}</i>`;
+  }).join("");
+  el("coachRing").classList.toggle("show", c.phase==="rest");
+  el("coachDone").style.display    = c.phase==="rest" ? "none" : "";
+  el("coachSkipRest").style.display= c.phase==="rest" ? "" : "none";
+  el("coachAdd15").style.display   = c.phase==="rest" ? "" : "none";
+  if(c.phase==="done"){
+    el("coachEx").textContent  = "تمرین کامل شد 🎉";
+    el("coachSet").textContent = "همه حرکت‌ها انجام شد";
+    el("coachReps").textContent = "آفرین!";
+    el("coachNext").textContent = "";
+    el("coachDone").textContent = "✅ بازگشت به برنامه";
+    return;
+  }
+  el("coachDone").textContent = "✅ ست تمام";
+  el("coachEx").textContent  = ex.n;
+  el("coachSet").textContent = `ست ${fa(c.setIdx+1)} از ${fa(ex.s)}`;
+  el("coachReps").textContent= `${ex.r} تکرار · استراحت ${fa(ex.rest)}ث`;
+  el("coachNext").textContent = c.phase==="rest"
+    ? `بعدی: ${ex.n} — ست ${fa(c.setIdx+1)} از ${fa(ex.s)}`
+    : (coach.setIdx===0 && coach.exIdx>0 ? `حرکت جدید شروع می‌شود 💪` : "");
+}
+document.getElementById("coachClose").addEventListener("click", closeCoach);
+document.getElementById("coachVoice").addEventListener("click", ()=>{
+  voiceOn = !voiceOn;
+  document.getElementById("coachVoice").textContent = voiceOn ? "🔊" : "🔇";
+  if(voiceOn) announceSet();
+  else try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(e){}
+});
+document.getElementById("coachDone").addEventListener("click", ()=>{
+  if(coach && coach.phase==="done") closeCoach();
+  else coachSetDone();
+});
+document.getElementById("coachSkipRest").addEventListener("click", coachSkipRest);
+document.getElementById("coachAdd15").addEventListener("click", ()=>{
+  if(coach && coach.phase==="rest"){ coach.restEnd+=15000; coach.restTotal+=15; tickCoach(); }
+});
+
+/* ================= ۱۵) PWA: سرویس‌ورکر + دکمۀ نصب ================= */
 let deferredPrompt = null;
 const installBtn = document.getElementById("installBtn");
 window.addEventListener("beforeinstallprompt", e=>{
@@ -1248,7 +1483,7 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){
     .catch(err=> console.warn("SW:", err && err.message));
 }
 
-/* ================= ۱۵) شروع ================= */
+/* ================= ۱۶) شروع ================= */
 if(profile.programId){
   const p = buildPlan(profile.programId);
   if(p){ PLAN = p.days; PLAN._progName = p.name; }
