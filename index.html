@@ -498,7 +498,7 @@ footer b{color:var(--green2)}
 
 <footer>
   <button class="btn" id="whatsNewBtn" type="button" style="margin-bottom:10px">📣 تازه‌ها و بروزرسانی‌ها</button><br>
-  <b>GYM PRO</b> نسخه ۹ · PWA آفلاین — پرسشنامه، برنامه و پیشرفت فقط در مرورگر همین دستگاه (localStorage) نگه‌داشته می‌شوند. قابل نصب با دکمۀ «📲 نصب اپ».
+  <b>GYM PRO</b> نسخه ۱۰ · PWA آفلاین — پرسشنامه، برنامه و پیشرفت فقط در مرورگر همین دستگاه (localStorage) نگه‌داشته می‌شوند. قابل نصب با دکمۀ «📲 نصب اپ».
 </footer>
 
 <!-- ================= دستیار گام‌به‌گام (کوچ) ================= -->
@@ -1370,25 +1370,29 @@ let voiceOn = true;
 let voicePref = (()=>{ try{ return localStorage.getItem("gympro.voice.v1")||""; }catch(e){ return ""; } })();
 let voicesCache = [];
 function isFa(v){ return /^fa/i.test(v.lang||"") || /persian|فارس|فارسی/i.test(v.name||""); }
+function isEn(v){ return /^en/i.test(v.lang||"") || /english|انگلیس|انگلیسی/i.test(v.name||""); }
+function isFaEn(v){ return isFa(v) || isEn(v); }
 function loadVoices(){
   if(!window.speechSynthesis) return;
   try{ voicesCache = window.speechSynthesis.getVoices() || []; }catch(e){ voicesCache=[]; }
   fillVoiceSel();
 }
-function pickVoice(){
-  if(voicePref){ const m = voicesCache.find(v=>v.name===voicePref); if(m) return m; }
-  const fa = voicesCache.filter(isFa);
-  if(!fa.length) return null;
+function bestOf(list){
+  if(!list.length) return null;
   const q = n => /google|natural|premium|neural|enhanced/i.test(n) ? 1 : 0;
-  fa.sort((a,b)=> q(b.name)-q(a.name));
-  return fa[0];
+  return [...list].sort((a,b)=> q(b.name)-q(a.name))[0];
+}
+function pickVoice(){
+  if(voicePref){ const m = voicesCache.find(v=>v.name===voicePref); if(m && isFaEn(m)) return m; }
+  return bestOf(voicesCache.filter(isFa)) || bestOf(voicesCache.filter(isEn)) || null;
 }
 function fillVoiceSel(){
   const sel = document.getElementById("coachVoiceSel"); if(!sel) return;
   const esc = x => String(x).replace(/"/g,"&quot;");
-  const sorted = [...voicesCache].sort((a,b)=> (isFa(b)?1:0)-(isFa(a)?1:0));
-  sel.innerHTML = '<option value="">— خودکار (فارسی) —</option>' +
-    sorted.map(v=>`<option value="${esc(v.name)}">${(isFa(v)?"🗣️ ":"")+esc(v.name)}</option>`).join("");
+  const list = voicesCache.filter(isFaEn);
+  const sorted = [...list].sort((a,b)=> (isFa(b)?1:0)-(isFa(a)?1:0));
+  sel.innerHTML = '<option value="">— خودکار (فارسی/انگلیسی) —</option>' +
+    sorted.map(v=>`<option value="${esc(v.name)}">${(isFa(v)?"🗣️ ":"🔊 ")+esc(v.name)}</option>`).join("");
   if(voicePref) sel.value = voicePref;
   const hint = document.getElementById("coachVoiceHint");
   if(hint) hint.classList.toggle("show", voicesCache.length>0 && !voicesCache.some(isFa));
@@ -1577,8 +1581,12 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){
 
 /* ================= ۱۶) پنجره تازه‌ها (What's New) ================= */
 const LS_SEEN = "gympro.seen.v1";
-const APP_VERSION = 9;
+const APP_VERSION = 10;
 const CHANGELOG = [
+  {v:10, date:"۱۴۰۵/۰۶/۱۲", title:"محدودیت صدا به فارسی/انگلیسی", items:[
+    "انتخاب‌گر صدا فقط صداهای فارسی و انگلیسی را نشان می‌دهد (بقیه زبان‌ها حذف شدند)",
+    "انتخاب خودکار: اولویّت فارسی، در غیاب آن انگلیسی (نه زبان تصادفی دیگر)",
+  ]},
   {v:9, date:"۱۴۰۵/۰۶/۱۲", title:"صدای فارسی 🗣️", items:[
     "انتخاب خودکار باکیفیت‌ترین صدای فارسی دستگاه (Google/Natural/Neural اولویت)",
     "انتخاب‌گر دستی صدا داخل کوچ + ذخیره در دستگاه",
