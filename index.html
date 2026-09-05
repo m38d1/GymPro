@@ -606,7 +606,7 @@ footer b{color:var(--green2)}
 
 <footer>
   <button class="btn" id="whatsNewBtn" type="button" style="margin-bottom:10px">📣 تازه‌ها و بروزرسانی‌ها</button><br>
-  <b>GYM PRO</b> نسخه ۱۷ · PWA آفلاین — پرسشنامه، برنامه و پیشرفت فقط در مرورگر همین دستگاه (localStorage) نگه‌داشته می‌شوند. قابل نصب با دکمۀ «📲 نصب اپ».
+  <b>GYM PRO</b> نسخه ۱۸ · PWA آفلاین — پرسشنامه، برنامه و پیشرفت فقط در مرورگر همین دستگاه (localStorage) نگه‌داشته می‌شوند. قابل نصب با دکمۀ «📲 نصب اپ».
 </footer>
 
 <!-- ================= دستیار گام‌به‌گام (کوچ) ================= -->
@@ -1624,8 +1624,13 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){
 
 /* ================= ۱۶) پنجره تازه‌ها (What's New) ================= */
 const LS_SEEN = "gympro.seen.v1";
-const APP_VERSION = 17;
+const APP_VERSION = 18;
 const CHANGELOG = [
+  {v:18, date:"۱۴۰۵/۰۶/۱۲", title:"لیست غذایی ایرانی 🇮🇷", items:[
+    "گسترش پایگاه‌داده: ~۷۵ خوراکی ایرانی (نان، پلوها، خورشت‌ها، کباب، آش، صبحانه، شیرینی، شربت، نوشیدنی)",
+    "دسته‌بندی‌های جدید: غذاهای ایرانی / صبحانه ایرانی / شیرینی ایرانی / نوشیدنی ایرانی",
+    "پوشش کامل از خوراکی و تنقلات تا نوشیدنی و غذاهای سنتی — همچنان آفلاین",
+  ]},
   {v:17, date:"۱۴۰۵/۰۶/۱۲", title:"تغذیه و کالری 🍎", items:[
     "بخش تغذیه: ثبت خوراکی به‌تفکیک روز + محاسبه خودکار کالری/پروتئین/کربوهیدرات/چربی",
     "پایگاه‌داده داخلی ~۱۱۰ خوراکی (۱۲ دسته) — کاملاً آفلاین",
@@ -1741,7 +1746,8 @@ let nutriDate = new Date();
 const NCAT = {bread:"نان و غلات", rice:"برنج و ماکارونی", protein:"گوشت، مرغ و ماهی",
   dairy:"لبنیات و تخم‌مرغ", legume:"حبوبات", veg:"سبزیجات", fruit:"میوه‌ها",
   nuts:"آجیل و دانه‌ها", fat:"چربی‌ها و روغن‌ها", sweet:"شیرینی و تنقلات",
-  drink:"نوشیدنی‌ها", fast:"فست‌فود و آماده"};
+  drink:"نوشیدنی‌ها", fast:"فست‌فود و آماده",
+  dish:"غذاهای ایرانی", breakfast:"صبحانه ایرانی", sweet_ir:"شیرینی ایرانی", drink_ir:"نوشیدنی ایرانی"};
 const FOODS = [
   {id:"bread_sangak",n:"نان سنگک",c:"bread",k:300,p:10,ca:58,f:1.5},
   {id:"bread_barbari",n:"نان بربری",c:"bread",k:270,p:9,ca:55,f:1},
@@ -1846,7 +1852,83 @@ const FOODS = [
   {id:"fries",n:"سیب‌زمینی سرخ‌کرده",c:"fast",k:312,p:3.4,ca:41,f:15},
   {id:"koobideh",n:"کباب کوبیده",c:"fast",k:290,p:17,ca:12,f:20},
   {id:"sandwich",n:"ساندویچ",c:"fast",k:220,p:12,ca:25,f:8},
-  {id:"shawarma",n:"شاورما",c:"fast",k:290,p:20,ca:15,f:17}
+  {id:"shawarma",n:"شاورما",c:"fast",k:290,p:20,ca:15,f:17},
+  {id:"ir_taftoon",n:"نان تافتون",c:"bread",k:275,p:9,ca:55,f:1},
+  {id:"ir_sheermal",n:"نان شیرمال",c:"bread",k:320,p:9,ca:58,f:6},
+  {id:"ir_fancy",n:"نان فانتزی",c:"bread",k:280,p:9,ca:54,f:3},
+  {id:"ir_khoshk",n:"نان خشک/سوخاری",c:"bread",k:380,p:11,ca:75,f:3},
+  {id:"ir_zereshk",n:"زرشک‌پلو",c:"rice",k:180,p:3.5,ca:32,f:4},
+  {id:"ir_sabzi_polo",n:"سبزی‌پلو",c:"rice",k:175,p:4,ca:32,f:3},
+  {id:"ir_kalam",n:"کلم‌پلو",c:"rice",k:185,p:4,ca:33,f:4},
+  {id:"ir_istanbuli",n:"استانبولی‌پلو",c:"rice",k:150,p:5,ca:22,f:4},
+  {id:"ir_macaroni_ir",n:"ماکارونی ایرانی",c:"rice",k:170,p:6,ca:28,f:4},
+  {id:"ir_lubia",n:"لوبیاپخته",c:"rice",k:127,p:8.7,ca:23,f:0.5},
+  {id:"ir_baqala",n:"باقلاقاتق",c:"rice",k:130,p:8,ca:22,f:1.5},
+  {id:"ir_jooje",n:"جوجه‌کباب",c:"dish",k:180,p:20,ca:2,f:10},
+  {id:"ir_berg",n:"کباب برگ",c:"dish",k:250,p:24,ca:0,f:16},
+  {id:"ir_soltani",n:"کباب سلطانی",c:"dish",k:240,p:23,ca:5,f:15},
+  {id:"ir_bakht",n:"کباب بختیاری",c:"dish",k:220,p:22,ca:1,f:13},
+  {id:"ir_ghorme",n:"خورشت قورمه‌سبزی",c:"dish",k:160,p:12,ca:12,f:7},
+  {id:"ir_fesenjan",n:"خورشت فسنجان",c:"dish",k:230,p:10,ca:14,f:15},
+  {id:"ir_ghimeh",n:"خورشت قیمه",c:"dish",k:175,p:12,ca:18,f:7},
+  {id:"ir_karafs",n:"خورشت کرفس",c:"dish",k:140,p:10,ca:12,f:6},
+  {id:"ir_bademjan",n:"خورشت بادمجان",c:"dish",k:150,p:10,ca:14,f:7},
+  {id:"ir_aloo",n:"خورشت آلو",c:"dish",k:160,p:11,ca:16,f:7},
+  {id:"ir_beh",n:"خورشت به",c:"dish",k:150,p:10,ca:15,f:6},
+  {id:"ir_abgoosht",n:"آبگوشت/دیزی",c:"dish",k:170,p:14,ca:10,f:9},
+  {id:"ir_koofteh",n:"کوفته‌تبريزی",c:"dish",k:200,p:15,ca:18,f:8},
+  {id:"ir_kotlet",n:"کتلت",c:"dish",k:220,p:10,ca:20,f:11},
+  {id:"ir_kookoo_pot",n:"کوکو سیب‌زمینی",c:"dish",k:180,p:5,ca:22,f:8},
+  {id:"ir_kookoo_sabz",n:"کوکو سبزی",c:"dish",k:150,p:6,ca:12,f:9},
+  {id:"ir_dolmeh",n:"دلمه برگ‌مو",c:"dish",k:140,p:5,ca:18,f:5},
+  {id:"ir_halim",n:"حلیم",c:"dish",k:210,p:9,ca:30,f:6},
+  {id:"ir_ash_reshteh",n:"آش رشته",c:"dish",k:90,p:4,ca:16,f:1.5},
+  {id:"ir_ash_jo",n:"آش جو",c:"dish",k:80,p:4,ca:15,f:1.2},
+  {id:"ir_ash_doogh",n:"آش دوغ",c:"dish",k:95,p:5,ca:14,f:2.5},
+  {id:"ir_soup",n:"سوپ سبزیجات",c:"dish",k:60,p:3,ca:10,f:1},
+  {id:"ir_nimro",n:"نیمرو",c:"breakfast",k:200,p:13,ca:1,f:16},
+  {id:"ir_omlet",n:"املت",c:"breakfast",k:160,p:12,ca:3,f:11},
+  {id:"ir_npg",n:"نان‌وپنیر‌وگردو",c:"breakfast",k:320,p:14,ca:35,f:14},
+  {id:"ir_halim_badam",n:"حلیم‌بادام",c:"breakfast",k:220,p:9,ca:30,f:7},
+  {id:"ir_mast_ch",n:"ماست چکیده",c:"dairy",k:140,p:10,ca:4,f:8},
+  {id:"ir_mast_khiar",n:"ماست و خیار",c:"dairy",k:55,p:2,ca:5,f:3},
+  {id:"ir_liqavan",n:"پنیر لیقوان",c:"dairy",k:280,p:18,ca:1,f:22},
+  {id:"ir_kashk",n:"کشک",c:"dairy",k:110,p:12,ca:8,f:4},
+  {id:"ir_shir_cocoa",n:"شیرکاکائو",c:"dairy",k:90,p:3,ca:15,f:3},
+  {id:"ir_ajil",n:"آجیل مخلوط",c:"nuts",k:600,p:18,ca:22,f:50},
+  {id:"ir_nokhodchi",n:"نخودچی",c:"nuts",k:380,p:19,ca:55,f:6},
+  {id:"ir_kishmish",n:"کشمش",c:"nuts",k:299,p:3,ca:79,f:0.5},
+  {id:"ir_tokhme_kado",n:"تخمه کدو",c:"nuts",k:559,p:30,ca:11,f:49},
+  {id:"ir_tokhme_hend",n:"تخمه هندوانه",c:"nuts",k:560,p:28,ca:15,f:47},
+  {id:"ir_polki",n:"پولکی",c:"nuts",k:400,p:1,ca:95,f:5},
+  {id:"ir_zeolbia",n:"زولبیا",c:"sweet_ir",k:450,p:3,ca:60,f:20},
+  {id:"ir_bamieh",n:"بامیه",c:"sweet_ir",k:420,p:4,ca:55,f:18},
+  {id:"ir_halva",n:"حلوا",c:"sweet_ir",k:400,p:6,ca:55,f:18},
+  {id:"ir_gaz",n:"گز",c:"sweet_ir",k:450,p:8,ca:70,f:15},
+  {id:"ir_baqleva",n:"باقلوا",c:"sweet_ir",k:430,p:6,ca:55,f:22},
+  {id:"ir_pashmak",n:"پشمک",c:"sweet_ir",k:400,p:4,ca:85,f:8},
+  {id:"ir_sohan",n:"سوهان قم",c:"sweet_ir",k:460,p:10,ca:65,f:18},
+  {id:"ir_cake_yazdi",n:"کیک یزدی",c:"sweet_ir",k:350,p:5,ca:55,f:12},
+  {id:"ir_nan_berenji",n:"نان برنجی",c:"sweet_ir",k:430,p:5,ca:75,f:15},
+  {id:"ir_ranginak",n:"رنگینک",c:"sweet_ir",k:400,p:6,ca:60,f:16},
+  {id:"ir_basloogh",n:"باسلوق",c:"sweet_ir",k:360,p:2,ca:80,f:5},
+  {id:"ir_moraba",n:"مربا",c:"sweet_ir",k:250,p:0.4,ca:65,f:0.1},
+  {id:"ir_ardeh",n:"ارده",c:"sweet_ir",k:580,p:17,ca:22,f:50},
+  {id:"ir_shire_ang",n:"شیره انگبین",c:"sweet_ir",k:320,p:0.5,ca:80,f:0},
+  {id:"ir_nan_khamaei",n:"نان خامه‌ای",c:"sweet_ir",k:420,p:8,ca:55,f:18},
+  {id:"ir_nabat",n:"نبات",c:"sweet_ir",k:390,p:0,ca:97,f:0},
+  {id:"ir_sherbet_limoo",n:"شربت آبلیمو",c:"drink_ir",k:60,p:0.1,ca:15,f:0},
+  {id:"ir_sherbet_sekanj",n:"شربت سکنجبین",c:"drink_ir",k:70,p:0,ca:17,f:0},
+  {id:"ir_sherbet_zaaf",n:"شربت زعفران",c:"drink_ir",k:65,p:0,ca:16,f:0},
+  {id:"ir_nescafe",n:"نسکافه",c:"drink_ir",k:35,p:0.3,ca:7,f:0.1},
+  {id:"ir_damnoosh",n:"دمنوش نعنا",c:"drink_ir",k:3,p:0,ca:0.5,f:0},
+  {id:"ir_shir_honey",n:"شیرعسل",c:"drink_ir",k:90,p:3,ca:15,f:3},
+  {id:"ir_falafel",n:"فلافل",c:"fast",k:310,p:12,ca:30,f:15},
+  {id:"ir_sandwich",n:"ساندویچ کالباس",c:"fast",k:250,p:12,ca:28,f:10},
+  {id:"ir_sosis",n:"سوسیس",c:"fast",k:290,p:12,ca:2,f:26},
+  {id:"ir_narang",n:"نارنگی",c:"fruit",k:47,p:0.8,ca:12,f:0.1},
+  {id:"ir_alooche",n:"آلوچه",c:"fruit",k:50,p:1,ca:12,f:0.3},
+  {id:"ir_qeysi",n:"قیسی (زردآلوی خشک)",c:"fruit",k:240,p:3,ca:55,f:0.5}
 ];
 function nutriKey(d){ const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,"0"); const da=String(d.getDate()).padStart(2,"0"); return y+"-"+m+"-"+da; }
 function nutriDateLabel(d){ const t=new Date(); return (d.getFullYear()===t.getFullYear()&&d.getMonth()===t.getMonth()&&d.getDate()===t.getDate())? "امروز" : nutriKey(d); }
