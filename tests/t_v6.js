@@ -51,11 +51,6 @@ setTimeout(() => {
   out.set2 = d.getElementById("coachSet").textContent;
   out.ringHidden = !d.getElementById("coachRing").classList.contains("show");
 
-  // صدای خاموش/روشن
-  d.getElementById("coachVoice").click();
-  out.muted = d.getElementById("coachVoice").textContent === "🔇";
-  d.getElementById("coachVoice").click();
-
   // تا پایان تمرین ادامه بده (work → done، rest → skip)
   let guard = 0;
   while (guard++ < 80) {
