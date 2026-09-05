@@ -98,16 +98,20 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
 #bodyForm .actions{margin-top:14px;display:flex;gap:8px}
 
 /* ========== تب‌های روزهای هفته ========== */
-.days{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
-.day-tab{flex:0 0 auto;cursor:pointer;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 16px;text-align:center;color:var(--muted);font-family:inherit;font-size:.82rem;transition:.2s;position:relative}
-.day-tab b{display:block;color:var(--text);font-size:.88rem}
-.day-tab .dot{position:absolute;top:6px;left:6px;width:8px;height:8px;border-radius:50%;background:var(--line);transition:.2s}
+.days{display:flex;gap:8px;overflow-x:auto;padding:4px 4px 14px;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.day-tab{flex:0 0 auto;cursor:pointer;background:var(--glass);border:1px solid var(--line2);border-radius:16px;padding:11px 16px 13px;text-align:center;color:var(--muted);font-family:inherit;font-size:.82rem;transition:.24s cubic-bezier(.2,.8,.2,1);position:relative;min-width:74px;backdrop-filter:blur(6px);box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+.day-tab b{display:block;color:var(--text);font-size:.9rem;margin-bottom:2px}
+.day-tab small{display:block;font-size:.62rem;color:var(--muted);line-height:1.3;max-width:84px;margin:0 auto}
+.day-tab .dot{position:absolute;top:7px;left:7px;width:8px;height:8px;border-radius:50%;background:var(--line);transition:.2s}
 .day-tab .dot.full{background:var(--green);box-shadow:0 0 8px var(--green)}
 .day-tab .dot.part{background:#fbbf24}
-.day-tab:hover{border-color:rgba(34,197,94,.4)}
-.day-tab.active{background:linear-gradient(160deg,rgba(34,197,94,.16),var(--panel));border-color:var(--green);color:var(--green2);box-shadow:var(--glow)}
+.day-tab .dt-bar{display:block;height:4px;background:rgba(0,0,0,.35);border-radius:99px;overflow:hidden;margin-top:8px}
+.day-tab .dt-bar i{display:block;height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.day-tab:hover{border-color:rgba(34,197,94,.5);transform:translateY(-3px);box-shadow:var(--glow)}
+.day-tab.active{background:var(--grad-soft);border-color:var(--green);color:var(--green2);box-shadow:var(--glow)}
 .day-tab.active b{color:var(--green2)}
-.day-tab.today::after{content:"امروز";position:absolute;bottom:-9px;right:50%;transform:translateX(50%);background:var(--lime);color:#12220a;font-size:.6rem;font-weight:800;padding:1px 8px;border-radius:999px}
+.day-tab.active .dt-bar i{box-shadow:0 0 8px rgba(34,197,94,.6)}
+.day-tab.today::after{content:"امروز";position:absolute;bottom:-9px;right:50%;transform:translateX(50%);background:var(--grad);color:#12220a;font-size:.6rem;font-weight:800;padding:1px 8px;border-radius:999px}
 
 /* ========== پنل تمرین روز ========== */
 .day-panel{margin-top:18px;background:var(--glass);border:1px solid var(--line2);border-radius:22px;padding:22px;box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.05);backdrop-filter:blur(10px)}
@@ -511,7 +515,7 @@ footer b{color:var(--green2)}
 
 <footer>
   <button class="btn" id="whatsNewBtn" type="button" style="margin-bottom:10px">📣 تازه‌ها و بروزرسانی‌ها</button><br>
-  <b>GYM PRO</b> نسخه ۱۱ · PWA آفلاین — پرسشنامه، برنامه و پیشرفت فقط در مرورگر همین دستگاه (localStorage) نگه‌داشته می‌شوند. قابل نصب با دکمۀ «📲 نصب اپ».
+  <b>GYM PRO</b> نسخه ۱۲ · PWA آفلاین — پرسشنامه، برنامه و پیشرفت فقط در مرورگر همین دستگاه (localStorage) نگه‌داشته می‌شوند. قابل نصب با دکمۀ «📲 نصب اپ».
 </footer>
 
 <!-- ================= دستیار گام‌به‌گام (کوچ) ================= -->
@@ -892,7 +896,7 @@ function candidates(p){
 /* ================= ۸) ابزار فارسی ================= */
 function fa(n){ return Number(n).toLocaleString("fa-IR"); }
 function faPct(n){ return fa(n)+"٪"; }
-function todayId(){ const g=new Date().getDay(); return ["sa","ya","do","se","ch","pa","jo"][g]; }
+function todayId(){ const g=new Date().getDay(); return ["sa","ya","do","se","ch","pa","jo"][(g+1)%7]; }
 function dayById(id){ return PLAN.find(d=>d.id===id); }
 function doneList(id){ return Array.isArray(done.map[id]) ? done.map[id] : []; }
 function dayProgress(d){
@@ -976,8 +980,10 @@ function renderDays(){
     const p = dayProgress(d);
     const dot = p===null ? "" : (p>=100 ? `<span class="dot full"></span>` : (p>0 ? `<span class="dot part"></span>` : `<span class="dot"></span>`));
     const focus = d.focus.length>14 ? d.focus.slice(0,13)+"…" : d.focus;
+    const pct = p===null ? 0 : p;
     return `<button class="day-tab ${d.id===activeDay?"active":""} ${d.id===t?"today":""}" data-day="${d.id}" role="tab">
-      ${dot}<b>${d.name}</b>${focus}
+      ${dot}<b>${d.name}</b><small>${focus}</small>
+      <span class="dt-bar"><i style="width:${pct}%"></i></span>
     </button>`;
   }).join("");
   document.querySelectorAll(".day-tab").forEach(btn=>{
@@ -1520,8 +1526,13 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){
 
 /* ================= ۱۶) پنجره تازه‌ها (What's New) ================= */
 const LS_SEEN = "gympro.seen.v1";
-const APP_VERSION = 11;
+const APP_VERSION = 12;
 const CHANGELOG = [
+  {v:12, date:"۱۴۰۵/۰۶/۱۲", title:"رفع باگ روز + مدرن‌سازی تب‌های هفته", items:[
+    "رفع باگ: تشخیص اشتباه روز هفته (جمعه به‌جای شنبه) با شیفت صحیح getDay",
+    "تب‌های روز شیشه‌ای با زیرنویس نوع تمرین + نوار پیشرفت هر روز",
+    "حالت انتخاب‌شده و «امروز» با گرادیان لیمو→سبز و لیفت هنگام هاور",
+  ]},
   {v:11, date:"۱۴۰۵/۰۶/۱۲", title:"لایه مدرن + حذف صدای گفتار 🔇", items:[
     "پس‌زمینه aurora متحرک + انیمیشن ورود کارت‌ها + گرادیان زنده دکمه‌ها",
     "حذف کامل صدای گفتار (SpeechSynthesis) — فقط بوق WebAudio + لرزش باقی ماند",
