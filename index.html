@@ -16,32 +16,32 @@
 /* ========== متغیرهای تم تیره/سبز ========== */
 :root{
   --bg:#070c0a; --bg2:#0a1210; --panel:#0e1712; --card:#122019; --card2:#16281f;
-  --line:#1e3529; --green:#22c55e; --green2:#4ade80; --lime:#a3e635;
-  --text:#e9f6ee; --muted:#8fb0a0; --danger:#f87171;
+  --line:#241b3a; --green:#8b5cf6; --green2:#a78bfa; --lime:#22d3ee;
+  --text:#e9f6ee; --muted:#a7a3c4; --danger:#f87171;
   --glass:rgba(255,255,255,.04); --glass2:rgba(255,255,255,.07);
   --line2:rgba(255,255,255,.10);
-  --radius:20px; --shadow:0 18px 44px rgba(0,0,0,.5); --glow:0 0 22px rgba(34,197,94,.3);
+  --radius:20px; --shadow:0 18px 44px rgba(0,0,0,.5); --glow:0 0 22px rgba(139,92,246,.3);
   --grad:linear-gradient(135deg,var(--lime),var(--green));
-  --grad-soft:linear-gradient(135deg,rgba(163,230,53,.16),rgba(34,197,94,.16));
+  --grad-soft:linear-gradient(135deg,rgba(34,211,238,.16),rgba(139,92,246,.16));
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
   font-family:system-ui,"Segoe UI",Tahoma,"Iranian Sans",sans-serif;
   background:
-    radial-gradient(1000px 520px at 88% -12%, rgba(34,197,94,.14), transparent 60%),
-    radial-gradient(820px 440px at -6% 12%, rgba(163,230,53,.07), transparent 55%),
-    radial-gradient(700px 500px at 50% 120%, rgba(34,197,94,.08), transparent 60%),
+    radial-gradient(1000px 520px at 88% -12%, rgba(139,92,246,.14), transparent 60%),
+    radial-gradient(820px 440px at -6% 12%, rgba(34,211,238,.07), transparent 55%),
+    radial-gradient(700px 500px at 50% 120%, rgba(139,92,246,.08), transparent 60%),
     linear-gradient(rgba(255,255,255,.022) 1px, transparent 1px) 0 0/100% 26px,
     linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px) 0 0/26px 100%,
     var(--bg);
   color:var(--text); min-height:100vh; line-height:1.85;
 }
 body.locked{overflow:hidden}
-::selection{background:rgba(34,197,94,.35);color:#fff}
+::selection{background:rgba(139,92,246,.35);color:#fff}
 ::-webkit-scrollbar{width:10px;height:10px}
-::-webkit-scrollbar-thumb{background:rgba(34,197,94,.35);border-radius:99px;border:2px solid transparent;background-clip:padding-box}
-::-webkit-scrollbar-thumb:hover{background:rgba(34,197,94,.6);background-clip:padding-box}
+::-webkit-scrollbar-thumb{background:rgba(139,92,246,.35);border-radius:99px;border:2px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:rgba(139,92,246,.6);background-clip:padding-box}
 ::-webkit-scrollbar-track{background:transparent}
 :focus-visible{outline:2px solid var(--green);outline-offset:2px;border-radius:8px}
 .grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -50,10 +50,10 @@ body.locked{overflow:hidden}
 header{position:sticky;top:0;z-index:50;background:rgba(7,12,10,.72);backdrop-filter:saturate(150%) blur(16px);border-bottom:1px solid var(--line2)}
 .hwrap{max-width:1100px;margin:0 auto;padding:13px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:13px}
-.logo{width:48px;height:48px;border-radius:15px;flex:0 0 auto;background:var(--grad);display:grid;place-items:center;box-shadow:0 6px 22px rgba(34,197,94,.45);position:relative;overflow:hidden}
+.logo{width:48px;height:48px;border-radius:15px;flex:0 0 auto;background:var(--grad);display:grid;place-items:center;box-shadow:0 6px 22px rgba(139,92,246,.45);position:relative;overflow:hidden}
 .logo::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.5) 50%,transparent 70%);animation:sheen 4s infinite}
 @keyframes sheen{0%,60%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
-.logo svg{width:27px;height:27px;fill:#04150b;position:relative;z-index:1}
+.logo svg{width:27px;height:27px;fill:#ffffff;position:relative;z-index:1}
 .brand h1{font-size:1.32rem;letter-spacing:.5px;line-height:1.3}
 .brand h1 span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .brand small{display:block;color:var(--muted);font-size:.72rem;font-weight:400}
@@ -63,8 +63,8 @@ header{position:sticky;top:0;z-index:50;background:rgba(7,12,10,.72);backdrop-fi
 .btn{cursor:pointer;border:1px solid var(--line2);background:var(--glass);color:var(--text);padding:9px 18px;border-radius:999px;font-size:.83rem;font-family:inherit;transition:.22s cubic-bezier(.2,.8,.2,1);display:inline-flex;align-items:center;gap:6px;backdrop-filter:blur(6px)}
 .btn:hover{border-color:var(--green);box-shadow:var(--glow);transform:translateY(-2px)}
 .btn:active{transform:translateY(0) scale(.97)}
-.btn.primary{background-size:220% 220%;background-image:linear-gradient(120deg,var(--lime),var(--green) 45%,#0f7a3d);border-color:transparent;color:#04150b;font-weight:800;box-shadow:0 8px 26px rgba(34,197,94,.4);animation:gradShift 6s ease infinite}
-.btn.primary:hover{filter:brightness(1.08);box-shadow:0 10px 30px rgba(34,197,94,.55)}
+.btn.primary{background-size:220% 220%;background-image:linear-gradient(120deg,var(--lime),var(--green) 45%,#4c1d95);border-color:transparent;color:#ffffff;font-weight:800;box-shadow:0 8px 26px rgba(139,92,246,.4);animation:gradShift 6s ease infinite}
+.btn.primary:hover{filter:brightness(1.08);box-shadow:0 10px 30px rgba(139,92,246,.55)}
 @keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
 
@@ -77,9 +77,9 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
 /* ========== کارت‌های اطلاعات بدنی ========== */
 .stats{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(155px,1fr))}
 .stat{background:var(--glass);border:1px solid var(--line2);border-radius:var(--radius);padding:17px;position:relative;overflow:hidden;transition:.28s cubic-bezier(.2,.8,.2,1);box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
-.stat:hover{transform:translateY(-4px);border-color:rgba(34,197,94,.55);box-shadow:var(--shadow),var(--glow)}
-.stat::after{content:"";position:absolute;inset:auto -20px -30px auto;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,rgba(34,197,94,.16),transparent 70%)}
-.stat .ico{width:38px;height:38px;border-radius:11px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);display:grid;place-items:center;margin-bottom:10px}
+.stat:hover{transform:translateY(-4px);border-color:rgba(139,92,246,.55);box-shadow:var(--shadow),var(--glow)}
+.stat::after{content:"";position:absolute;inset:auto -20px -30px auto;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,.16),transparent 70%)}
+.stat .ico{width:38px;height:38px;border-radius:11px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25);display:grid;place-items:center;margin-bottom:10px}
 .stat .ico svg{width:20px;height:20px;stroke:var(--green2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .stat .lbl{font-size:.74rem;color:var(--muted)}
 .stat .val{font-size:1.45rem;font-weight:800;color:var(--text);line-height:1.4}
@@ -107,17 +107,17 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
 .day-tab .dot.part{background:#fbbf24}
 .day-tab .dt-bar{display:block;height:4px;background:rgba(0,0,0,.35);border-radius:99px;overflow:hidden;margin-top:8px}
 .day-tab .dt-bar i{display:block;height:100%;width:0;background:var(--grad);border-radius:99px;transition:width .5s cubic-bezier(.2,.8,.2,1)}
-.day-tab:hover{border-color:rgba(34,197,94,.5);transform:translateY(-3px);box-shadow:var(--glow)}
+.day-tab:hover{border-color:rgba(139,92,246,.5);transform:translateY(-3px);box-shadow:var(--glow)}
 .day-tab.active{background:var(--grad-soft);border-color:var(--green);color:var(--green2);box-shadow:var(--glow)}
 .day-tab.active b{color:var(--green2)}
-.day-tab.active .dt-bar i{box-shadow:0 0 8px rgba(34,197,94,.6)}
+.day-tab.active .dt-bar i{box-shadow:0 0 8px rgba(139,92,246,.6)}
 .day-tab.today::after{content:"امروز";position:absolute;bottom:-9px;right:50%;transform:translateX(50%);background:var(--grad);color:#12220a;font-size:.6rem;font-weight:800;padding:1px 8px;border-radius:999px}
 
 /* ========== پنل تمرین روز ========== */
 .day-panel{margin-top:18px;background:var(--glass);border:1px solid var(--line2);border-radius:22px;padding:22px;box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.05);backdrop-filter:blur(10px)}
 .day-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .day-head h2{font-size:1.18rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.day-head h2 .badge{font-size:.68rem;background:rgba(34,197,94,.16);border:1px solid rgba(34,197,94,.4);color:var(--green2);border-radius:999px;padding:2px 12px;font-weight:400;-webkit-text-fill-color:var(--green2)}
+.day-head h2 .badge{font-size:.68rem;background:rgba(139,92,246,.16);border:1px solid rgba(139,92,246,.4);color:var(--green2);border-radius:999px;padding:2px 12px;font-weight:400;-webkit-text-fill-color:var(--green2)}
 .day-head .goal{font-size:.75rem;color:var(--muted)}
 
 /* نوار پیشرفت */
@@ -125,26 +125,26 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
 .progress-meta{display:flex;justify-content:space-between;font-size:.76rem;color:var(--muted);margin-bottom:7px}
 .progress-meta b{color:var(--green2);font-size:.9rem}
 .bar{height:14px;background:#0a130e;border:1px solid var(--line);border-radius:999px;overflow:hidden;position:relative}
-.bar i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#0f7a3d,var(--green) 55%,var(--lime));box-shadow:0 0 12px rgba(34,197,94,.55);transition:width .5s cubic-bezier(.2,.8,.2,1);position:relative}
+.bar i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#4c1d95,var(--green) 55%,var(--lime));box-shadow:0 0 12px rgba(139,92,246,.55);transition:width .5s cubic-bezier(.2,.8,.2,1);position:relative}
 .bar i::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.25) 50%,transparent 70%);animation:shine 2.4s infinite}
 @keyframes shine{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
 
 /* لیست حرکت‌ها */
 .ex-list{margin-top:14px;display:grid;gap:10px}
 .ex{display:flex;align-items:center;gap:14px;background:var(--glass);border:1px solid var(--line2);border-radius:16px;padding:13px 16px;cursor:pointer;transition:.22s cubic-bezier(.2,.8,.2,1);user-select:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
-.ex:hover{border-color:rgba(34,197,94,.5);transform:translateX(-4px);box-shadow:var(--glow)}
+.ex:hover{border-color:rgba(139,92,246,.5);transform:translateX(-4px);box-shadow:var(--glow)}
 .ex .chk{width:25px;height:25px;flex:0 0 auto;border-radius:9px;border:2px solid var(--line);display:grid;place-items:center;transition:.22s;background:var(--bg2)}
-.ex .chk svg{width:14px;height:14px;stroke:#04150b;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0;transform:scale(.4);transition:.22s}
-.ex.done .chk{background:var(--grad);border-color:transparent;box-shadow:0 0 12px rgba(34,197,94,.5)}
+.ex .chk svg{width:14px;height:14px;stroke:#ffffff;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0;transform:scale(.4);transition:.22s}
+.ex.done .chk{background:var(--grad);border-color:transparent;box-shadow:0 0 12px rgba(139,92,246,.5)}
 .ex.done .chk svg{opacity:1;transform:scale(1)}
-.ex .num{width:28px;height:28px;flex:0 0 auto;border-radius:9px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:var(--green2);display:grid;place-items:center;font-size:.75rem;font-weight:700}
+.ex .num{width:28px;height:28px;flex:0 0 auto;border-radius:9px;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.25);color:var(--green2);display:grid;place-items:center;font-size:.75rem;font-weight:700}
 .ex .info{flex:1;min-width:0}
 .ex .info b{display:block;font-size:.92rem}
 .ex .info small{color:var(--muted);font-size:.72rem}
 .ex .spec{flex:0 0 auto;text-align:center;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:5px 12px;font-size:.78rem;color:var(--green2);font-weight:700;white-space:nowrap}
 .ex .spec small{display:block;color:var(--muted);font-size:.62rem;font-weight:400}
 .ex.done{opacity:.62}
-.ex.done .info b{text-decoration:line-through;text-decoration-color:rgba(74,222,128,.7)}
+.ex.done .info b{text-decoration:line-through;text-decoration-color:rgba(167,139,250,.7)}
 
 /* روز استراحت */
 .rest{text-align:center;padding:34px 16px;color:var(--muted)}
@@ -170,7 +170,7 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
 /* ========== تایمر استراحت (داک پایین) ========== */
 #restDock{position:fixed;bottom:18px;left:50%;transform:translate(-50%,180px);z-index:110;
   display:flex;align-items:center;gap:14px;padding:12px 18px;border-radius:20px;
-  background:rgba(14,23,18,.94);backdrop-filter:blur(14px);border:1px solid rgba(34,197,94,.45);
+  background:rgba(14,23,18,.94);backdrop-filter:blur(14px);border:1px solid rgba(139,92,246,.45);
   box-shadow:0 14px 40px rgba(0,0,0,.6),var(--glow);max-width:94vw;
   transition:transform .45s cubic-bezier(.2,.9,.25,1.15)}
 #restDock.show{transform:translate(-50%,0)}
@@ -186,7 +186,7 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
 .rd-btns{display:flex;gap:6px}
 .rd-btns button{cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:10px;padding:6px 11px;font-size:.78rem;font-family:inherit;transition:.2s}
 .rd-btns button:hover{border-color:var(--green);box-shadow:var(--glow)}
-.rd-btns .rd-skip{background:linear-gradient(135deg,var(--green),#0f7a3d);color:#04150b;font-weight:700;border-color:transparent}
+.rd-btns .rd-skip{background:linear-gradient(135deg,var(--green),#4c1d95);color:#ffffff;font-weight:700;border-color:transparent}
 #restDock.done .rd-ring{animation:pulse .55s 3}
 @keyframes pulse{50%{transform:scale(1.14)}}
 .ex .ex-t{flex:0 0 auto;width:34px;height:34px;border-radius:10px;border:1px solid var(--line);
@@ -196,11 +196,11 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
 /* ========== دستیار گام‌به‌گام (کوچ) ========== */
 #coach{position:fixed;inset:0;z-index:108;display:none;background:rgba(4,8,6,.87);backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:16px}
 #coach.open{display:flex}
-.coach-card{width:min(480px,100%);max-height:94vh;overflow-y:auto;background:var(--glass);border:1px solid rgba(34,197,94,.4);border-radius:28px;padding:18px;box-shadow:0 24px 70px rgba(0,0,0,.65),var(--glow),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(14px)}
+.coach-card{width:min(480px,100%);max-height:94vh;overflow-y:auto;background:var(--glass);border:1px solid rgba(139,92,246,.4);border-radius:28px;padding:18px;box-shadow:0 24px 70px rgba(0,0,0,.65),var(--glow),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(14px)}
 .coach-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .coach-day{font-size:.8rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .coach-bar{height:8px;background:#0a130e;border:1px solid var(--line);border-radius:99px;overflow:hidden;margin:14px 0 4px}
-.coach-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#0f7a3d,var(--green) 55%,var(--lime));border-radius:99px;transition:width .4s;box-shadow:0 0 10px rgba(34,197,94,.5)}
+.coach-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#4c1d95,var(--green) 55%,var(--lime));border-radius:99px;transition:width .4s;box-shadow:0 0 10px rgba(139,92,246,.5)}
 .coach-body{text-align:center;padding:16px 6px 6px}
 .coach-ex{font-size:1.4rem;font-weight:800;line-height:1.4;margin-bottom:8px}
 .coach-meta{display:flex;justify-content:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
@@ -214,8 +214,8 @@ main{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
 .coach-next{font-size:.78rem;color:var(--muted);min-height:22px;margin-bottom:8px}
 .coach-sets{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-bottom:6px}
 .coach-sets i{font-style:normal;font-size:.68rem;min-width:30px;padding:4px 8px;border-radius:9px;background:var(--card);border:1.5px solid var(--line);color:var(--muted)}
-.coach-sets i.on{border-color:var(--green);color:var(--green2);background:rgba(34,197,94,.12);box-shadow:var(--glow)}
-.coach-sets i.full{border-color:var(--green);background:var(--green);color:#04150b;font-weight:700}
+.coach-sets i.on{border-color:var(--green);color:var(--green2);background:rgba(139,92,246,.12);box-shadow:var(--glow)}
+.coach-sets i.full{border-color:var(--green);background:var(--green);color:#ffffff;font-weight:700}
 .coach-total{font-size:.72rem;color:var(--muted);margin-top:2px}
 .coach-actions{display:flex;gap:10px;margin-top:16px}
 .coach-actions .btn{font-size:.82rem}
@@ -229,11 +229,11 @@ body.coach-open #restDock{display:none}
 /* ========== پنجره تازه‌ها ========== */
 #whatsNew{position:fixed;inset:0;z-index:112;display:none;background:rgba(4,8,6,.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:16px}
 #whatsNew.open{display:flex}
-.wn{width:min(540px,100%);max-height:88vh;overflow-y:auto;background:var(--glass);border:1px solid rgba(34,197,94,.4);border-radius:24px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(14px)}
+.wn{width:min(540px,100%);max-height:88vh;overflow-y:auto;background:var(--glass);border:1px solid rgba(139,92,246,.4);border-radius:24px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(14px)}
 .wn h2{font-size:1.1rem;display:flex;align-items:center;gap:8px;margin-bottom:4px}
 .wn .wn-sub{font-size:.72rem;color:var(--muted);margin-bottom:14px}
 .wn-entry{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px}
-.wn-entry.new{border-color:rgba(34,197,94,.5);box-shadow:var(--glow)}
+.wn-entry.new{border-color:rgba(139,92,246,.5);box-shadow:var(--glow)}
 .wn-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
 .wn-v{font-size:.68rem;font-weight:800;background:linear-gradient(135deg,var(--lime),var(--green));color:#12220a;border-radius:999px;padding:1px 10px}
 .wn-date{font-size:.68rem;color:var(--muted)}
@@ -245,7 +245,7 @@ body.coach-open #restDock{display:none}
 
 /* ========== نقشه حرارتی عضلات ========== */
 .mus-wrap{background:var(--glass);border:1px solid var(--line2);border-radius:24px;padding:18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 18px 44px rgba(0,0,0,.5);backdrop-filter:blur(12px);position:relative;overflow:hidden}
-.mus-wrap::before{content:"";position:absolute;inset:0;border-radius:24px;padding:1px;background:linear-gradient(135deg,rgba(163,230,53,.55),rgba(34,197,94,.18),transparent 60%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:.65}
+.mus-wrap::before{content:"";position:absolute;inset:0;border-radius:24px;padding:1px;background:linear-gradient(135deg,rgba(34,211,238,.55),rgba(139,92,246,.18),transparent 60%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:.65}
 .mus-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
 .mus-legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.7rem;color:var(--muted)}
 .mus-legend i{width:11px;height:11px;border-radius:50%;display:inline-block;margin-inline-end:4px;vertical-align:middle;box-shadow:0 0 7px rgba(255,255,255,.18)}
@@ -255,7 +255,7 @@ body.coach-open #restDock{display:none}
 .mus-figs svg{width:min(46%,230px);height:auto}
 .mus .sil{fill:url(#mgSil);stroke:var(--line2);stroke-width:1.3;filter:drop-shadow(0 6px 14px rgba(0,0,0,.45))}
 .mus [data-m]{stroke:rgba(7,16,9,.6);stroke-width:1;cursor:pointer;transition:fill .45s,opacity .45s,filter .3s;filter:drop-shadow(0 0 5px rgba(0,0,0,.35))}
-.mus [data-m]:hover{stroke:var(--lime);stroke-width:1.8;filter:drop-shadow(0 0 10px rgba(163,230,53,.85))}
+.mus [data-m]:hover{stroke:var(--lime);stroke-width:1.8;filter:drop-shadow(0 0 10px rgba(34,211,238,.85))}
 .mus [data-m].tired{animation:musPulseRed 1.5s ease-in-out infinite}
 .mus [data-m].rec{animation:musPulseAmber 2.1s ease-in-out infinite}
 @keyframes musPulseRed{0%,100%{filter:drop-shadow(0 0 4px rgba(239,68,68,.45))}50%{filter:drop-shadow(0 0 13px rgba(239,68,68,.95))}}
@@ -282,7 +282,7 @@ body.coach-open #restDock{display:none}
 .wz-head p{color:var(--muted);font-size:.78rem}
 .wz-dots{display:flex;justify-content:center;gap:8px;margin:16px 0 22px}
 .wz-dots i{width:34px;height:5px;border-radius:99px;background:var(--line);transition:.3s}
-.wz-dots i.on{background:linear-gradient(90deg,var(--green),var(--lime));box-shadow:0 0 8px rgba(34,197,94,.5)}
+.wz-dots i.on{background:linear-gradient(90deg,var(--green),var(--lime));box-shadow:0 0 8px rgba(139,92,246,.5)}
 .wz-step{display:none}
 .wz-step.on{display:block;animation:fadein .3s}
 @keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -290,8 +290,8 @@ body.coach-open #restDock{display:none}
 .q:first-child{margin-top:0}
 .seg{display:flex;gap:8px;flex-wrap:wrap}
 .seg button{flex:1;min-width:90px;cursor:pointer;background:var(--card);border:1.5px solid var(--line);border-radius:12px;color:var(--text);font-family:inherit;font-size:.85rem;padding:11px 8px;transition:.2s}
-.seg button:hover{border-color:rgba(34,197,94,.5)}
-.seg button.sel{border-color:transparent;background:var(--grad);color:#04150b;font-weight:800;box-shadow:0 6px 20px rgba(34,197,94,.45)}
+.seg button:hover{border-color:rgba(139,92,246,.5)}
+.seg button.sel{border-color:transparent;background:var(--grad);color:#ffffff;font-weight:800;box-shadow:0 6px 20px rgba(139,92,246,.45)}
 .seg button small{display:block;color:var(--muted);font-size:.65rem;font-weight:400}
 .seg button.sel small{color:var(--green2)}
 .seg-days button{min-width:calc(25% - 6px);font-size:.8rem;padding:9px 4px}
@@ -305,8 +305,8 @@ body.coach-open #restDock{display:none}
 /* کارت‌های برنامه پیشنهادی */
 .plans{display:grid;gap:14px;margin-top:6px}
 .plan{background:var(--glass);border:1.5px solid var(--line2);border-radius:18px;padding:16px;position:relative;transition:.24s cubic-bezier(.2,.8,.2,1);box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
-.plan:hover{border-color:rgba(34,197,94,.6);transform:translateY(-3px);box-shadow:var(--shadow)}
-.plan.best{border-color:var(--green);box-shadow:var(--glow),0 0 0 1px rgba(34,197,94,.4)}
+.plan:hover{border-color:rgba(139,92,246,.6);transform:translateY(-3px);box-shadow:var(--shadow)}
+.plan.best{border-color:var(--green);box-shadow:var(--glow),0 0 0 1px rgba(139,92,246,.4)}
 .plan .star{position:absolute;top:-11px;left:14px;background:linear-gradient(135deg,var(--lime),var(--green));color:#12220a;font-size:.66rem;font-weight:800;padding:2px 12px;border-radius:999px}
 .plan .p-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 .plan h3{font-size:1rem;color:var(--green2)}
@@ -316,12 +316,12 @@ body.coach-open #restDock{display:none}
 .plan .fit span{font-size:.62rem;color:var(--muted)}
 .plan .sched{display:flex;gap:5px;flex-wrap:wrap;margin:10px 0}
 .plan .sched i{font-style:normal;font-size:.64rem;background:var(--bg2);border:1px solid var(--line);border-radius:7px;padding:2px 8px;color:var(--muted)}
-.plan .sched i.tr{color:var(--green2);border-color:rgba(34,197,94,.35)}
+.plan .sched i.tr{color:var(--green2);border-color:rgba(139,92,246,.35)}
 .plan .why{font-size:.74rem;color:var(--muted);margin-bottom:12px}
 .plan .btn{width:100%;justify-content:center}
 
 /* ========== پیام (Toast) ========== */
-#toast{position:fixed;bottom:24px;right:50%;transform:translate(50%,80px);background:linear-gradient(135deg,var(--green),#0f7a3d);color:#04150b;font-weight:800;font-size:.88rem;padding:12px 26px;border-radius:999px;box-shadow:0 10px 30px rgba(34,197,94,.4);opacity:0;transition:.35s;z-index:120;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
+#toast{position:fixed;bottom:24px;right:50%;transform:translate(50%,80px);background:linear-gradient(135deg,var(--green),#4c1d95);color:#ffffff;font-weight:800;font-size:.88rem;padding:12px 26px;border-radius:999px;box-shadow:0 10px 30px rgba(139,92,246,.4);opacity:0;transition:.35s;z-index:120;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
 #toast.show{transform:translate(50%,0);opacity:1}
 
 /* ========== پاورقی ========== */
@@ -355,9 +355,9 @@ footer b{color:var(--green2)}
 @keyframes auroraMove{from{transform:translate3d(-3%,-2%,0) scale(1)}to{transform:translate3d(4%,3%,0) scale(1.08)}}
 .aurora{position:fixed;inset:-25%;z-index:-1;pointer-events:none;opacity:.55;filter:blur(46px);
   background:
-    radial-gradient(38% 38% at 28% 32%, rgba(34,197,94,.28), transparent 70%),
-    radial-gradient(34% 34% at 72% 60%, rgba(163,230,53,.20), transparent 70%),
-    radial-gradient(30% 30% at 50% 85%, rgba(34,197,94,.16), transparent 70%);
+    radial-gradient(38% 38% at 28% 32%, rgba(139,92,246,.28), transparent 70%),
+    radial-gradient(34% 34% at 72% 60%, rgba(34,211,238,.20), transparent 70%),
+    radial-gradient(30% 30% at 50% 85%, rgba(139,92,246,.16), transparent 70%);
   animation:auroraMove 20s ease-in-out infinite alternate}
 @media (prefers-reduced-motion:reduce){
   .aurora{animation:none}
@@ -365,18 +365,18 @@ footer b{color:var(--green2)}
 }
 /* ========== v13: شیشه‌ای ترند سال ========== */
 .stat,.week-card,.day-panel,.plan{backdrop-filter:blur(12px);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 18px 44px rgba(0,0,0,.5)}
-.day-panel{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 20px 50px rgba(0,0,0,.55),0 0 0 1px rgba(34,197,94,.12)}
-.wn,.coach-card{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 24px 70px rgba(0,0,0,.65),0 0 0 1px rgba(34,197,94,.18)}
+.day-panel{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 20px 50px rgba(0,0,0,.55),0 0 0 1px rgba(139,92,246,.12)}
+.wn,.coach-card{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 24px 70px rgba(0,0,0,.65),0 0 0 1px rgba(139,92,246,.18)}
 .mus-sum span{background:var(--glass);border-color:var(--line2);backdrop-filter:blur(6px)}
 
 /* ========== v14: نقشه عضلات درخشان ========== */
 .mus [data-m]{transform-box:fill-box;transform-origin:center;filter:drop-shadow(0 1px 2px rgba(0,0,0,.5));transition:fill .45s,opacity .45s,filter .3s,transform .25s}
-.mus [data-m]:hover{transform:scale(1.07);stroke:var(--lime);stroke-width:1.8;filter:drop-shadow(0 0 12px rgba(163,230,53,.9))}
+.mus [data-m]:hover{transform:scale(1.07);stroke:var(--lime);stroke-width:1.8;filter:drop-shadow(0 0 12px rgba(34,211,238,.9))}
 .mus [data-m].ready{animation:musBreathe 3.4s ease-in-out infinite}
-@keyframes musBreathe{0%,100%{filter:drop-shadow(0 0 5px rgba(34,197,94,.45))}50%{filter:drop-shadow(0 0 13px rgba(34,197,94,.85))}}
+@keyframes musBreathe{0%,100%{filter:drop-shadow(0 0 5px rgba(34,211,238,.45))}50%{filter:drop-shadow(0 0 13px rgba(34,211,238,.9))}}
 .mus-figs{position:relative;animation:musFloat 6s ease-in-out infinite}
 @keyframes musFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-.mus-figs::before{content:"";position:absolute;inset:-12% 8% 28%;background:radial-gradient(circle at 50% 40%,rgba(34,197,94,.12),transparent 70%);filter:blur(10px);z-index:-1}
+.mus-figs::before{content:"";position:absolute;inset:-12% 8% 28%;background:radial-gradient(circle at 50% 40%,rgba(139,92,246,.12),transparent 70%);filter:blur(10px);z-index:-1}
 #musInfo{display:inline-block;background:var(--glass);border:1px solid var(--line2);border-radius:999px;padding:6px 16px;backdrop-filter:blur(6px);min-height:auto}
 @media (prefers-reduced-motion:reduce){
   .mus-figs,.mus [data-m]{animation:none!important}
@@ -387,12 +387,12 @@ footer b{color:var(--green2)}
 
 <div class="aurora" aria-hidden="true"></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-  <radialGradient id="mgReady" cx="35%" cy="28%" r="80%"><stop offset="0" stop-color="#eafdc4"/><stop offset="45%" stop-color="#4ade80"/><stop offset="100%" stop-color="#16a34a"/></radialGradient>
-  <radialGradient id="mgSoon" cx="35%" cy="28%" r="80%"><stop offset="0" stop-color="#f7fee0"/><stop offset="45%" stop-color="#a3e635"/><stop offset="100%" stop-color="#65a30d"/></radialGradient>
+  <radialGradient id="mgReady" cx="35%" cy="28%" r="80%"><stop offset="0" stop-color="#cffafe"/><stop offset="45%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#0891b2"/></radialGradient>
+  <radialGradient id="mgSoon" cx="35%" cy="28%" r="80%"><stop offset="0" stop-color="#ede9fe"/><stop offset="45%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#6d28d9"/></radialGradient>
   <radialGradient id="mgRec" cx="35%" cy="28%" r="80%"><stop offset="0" stop-color="#fde68a"/><stop offset="45%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#d97706"/></radialGradient>
   <radialGradient id="mgTired" cx="35%" cy="28%" r="80%"><stop offset="0" stop-color="#fecaca"/><stop offset="45%" stop-color="#ef4444"/><stop offset="100%" stop-color="#b91c1c"/></radialGradient>
-  <radialGradient id="mgNone" cx="40%" cy="25%" r="85%"><stop offset="0" stop-color="#1d3026"/><stop offset="100%" stop-color="#0c1712"/></radialGradient>
-  <radialGradient id="mgSil" cx="40%" cy="20%" r="90%"><stop offset="0" stop-color="#1e3327"/><stop offset="100%" stop-color="#0b1510"/></radialGradient>
+  <radialGradient id="mgNone" cx="40%" cy="25%" r="85%"><stop offset="0" stop-color="#1c1730"/><stop offset="100%" stop-color="#0b0a14"/></radialGradient>
+  <radialGradient id="mgSil" cx="40%" cy="20%" r="90%"><stop offset="0" stop-color="#1b1730"/><stop offset="100%" stop-color="#0a0913"/></radialGradient>
 </defs></svg>
 
 <!-- ================= سربرگ ================= -->
@@ -452,9 +452,9 @@ footer b{color:var(--green2)}
         <svg viewBox="0 0 92 92">
           <defs>
             <linearGradient id="gradRing" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#0f7a3d"/>
-              <stop offset="60%" stop-color="#22c55e"/>
-              <stop offset="100%" stop-color="#a3e635"/>
+              <stop offset="0%" stop-color="#4c1d95"/>
+              <stop offset="60%" stop-color="#8b5cf6"/>
+              <stop offset="100%" stop-color="#22d3ee"/>
             </linearGradient>
           </defs>
           <circle class="bgc" cx="46" cy="46" r="39"/>
@@ -477,8 +477,8 @@ footer b{color:var(--green2)}
   <div class="mus-wrap">
     <div class="mus-top">
       <div class="mus-legend">
-        <span><i style="background:#22c55e;box-shadow:0 0 6px #22c55e"></i>آماده</span>
-        <span><i style="background:#a3e635"></i>تقریباً آماده</span>
+        <span><i style="background:#8b5cf6;box-shadow:0 0 6px #8b5cf6"></i>آماده</span>
+        <span><i style="background:#22d3ee"></i>تقریباً آماده</span>
         <span><i style="background:#fb923c"></i>در حال ریکاوری</span>
         <span><i style="background:#ef4444"></i>خسته</span>
         <span><i style="background:#22382c"></i>بدون سابقه</span>
@@ -546,7 +546,7 @@ footer b{color:var(--green2)}
 
 <footer>
   <button class="btn" id="whatsNewBtn" type="button" style="margin-bottom:10px">📣 تازه‌ها و بروزرسانی‌ها</button><br>
-  <b>GYM PRO</b> نسخه ۱۴ · PWA آفلاین — پرسشنامه، برنامه و پیشرفت فقط در مرورگر همین دستگاه (localStorage) نگه‌داشته می‌شوند. قابل نصب با دکمۀ «📲 نصب اپ».
+  <b>GYM PRO</b> نسخه ۱۵ · PWA آفلاین — پرسشنامه، برنامه و پیشرفت فقط در مرورگر همین دستگاه (localStorage) نگه‌داشته می‌شوند. قابل نصب با دکمۀ «📲 نصب اپ».
 </footer>
 
 <!-- ================= دستیار گام‌به‌گام (کوچ) ================= -->
@@ -567,9 +567,9 @@ footer b{color:var(--green2)}
         <svg viewBox="0 0 140 140">
           <defs>
             <linearGradient id="gradCoach" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#0f7a3d"/>
-              <stop offset="60%" stop-color="#22c55e"/>
-              <stop offset="100%" stop-color="#a3e635"/>
+              <stop offset="0%" stop-color="#4c1d95"/>
+              <stop offset="60%" stop-color="#8b5cf6"/>
+              <stop offset="100%" stop-color="#22d3ee"/>
             </linearGradient>
           </defs>
           <circle class="cbg" cx="70" cy="70" r="62"/>
@@ -595,9 +595,9 @@ footer b{color:var(--green2)}
     <svg viewBox="0 0 64 64">
       <defs>
         <linearGradient id="gradRest" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#0f7a3d"/>
-          <stop offset="60%" stop-color="#22c55e"/>
-          <stop offset="100%" stop-color="#a3e635"/>
+          <stop offset="0%" stop-color="#4c1d95"/>
+          <stop offset="60%" stop-color="#8b5cf6"/>
+          <stop offset="100%" stop-color="#22d3ee"/>
         </linearGradient>
       </defs>
       <circle class="rbg" cx="32" cy="32" r="27"/>
@@ -1304,8 +1304,8 @@ function musStatus(m){
   const h=(Date.now()-ts)/36e5, rec=MUSCLES[m].rec;
   if(h<rec*0.5)  return {k:"tired", c:"#ef4444", t:"خسته — ریکاوری سنگین"};
   if(h<rec)      return {k:"rec",   c:"#fb923c", t:"در حال ریکاوری"};
-  if(h<rec*1.5)  return {k:"soon",  c:"#a3e635", t:"تقریباً آماده"};
-  return {k:"ready", c:"#22c55e", t:"آماده 💚"};
+  if(h<rec*1.5)  return {k:"soon",  c:"#22d3ee", t:"تقریباً آماده"};
+  return {k:"ready", c:"#8b5cf6", t:"آماده 💚"};
 }
 function agoTxt(ts){
   const h=(Date.now()-ts)/36e5;
@@ -1323,7 +1323,7 @@ function renderMuscles(){
     el.classList.toggle("rec", st.k==="rec");
     el.classList.toggle("ready", st.k==="ready"||st.k==="soon");
     el.style.filter = (st.k==="ready"||st.k==="soon")
-      ? "drop-shadow(0 0 6px rgba(34,197,94,.7))"
+      ? "drop-shadow(0 0 6px rgba(34,211,238,.7))"
       : (st.k==="rec" ? "drop-shadow(0 0 6px rgba(251,191,36,.6))"
                     : (st.k==="tired" ? "drop-shadow(0 0 6px rgba(239,68,68,.6))" : ""));
     el.style.opacity = st.k==="none" ? ".5" : "1";
@@ -1564,8 +1564,13 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){
 
 /* ================= ۱۶) پنجره تازه‌ها (What's New) ================= */
 const LS_SEEN = "gympro.seen.v1";
-const APP_VERSION = 14;
+const APP_VERSION = 15;
 const CHANGELOG = [
+  {v:15, date:"۱۴۰۵/۰۶/۱۲", title:"پالت بنفش الکتریک 🔮", items:[
+    "تعویض کامل رنگ سبز با پالت بنفش الکتریک (Indigo→Violet→Cyan)",
+    "آماده=فیروزه‌ای، نزدیک=بنفش، خسته=قرمز، ریکاوری=کهربا (سِمانتیک)",
+    "هاله/گلو/دکمه/هدر/نقشه عضلات یکپارچه با پالت جدید",
+  ]},
   {v:14, date:"۱۴۰۵/۰۶/۱۲", title:"نقشه عضلات درخشان 💎", items:[
     "گرادیان شعاعی براق با هایلایت (حس سه‌بعدی) برای هر وضعیت عضله",
     "درخشش تنفسی روی عضلات آماده + بزرگ‌نمایی هنگام هاور",
