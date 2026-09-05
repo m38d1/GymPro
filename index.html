@@ -20,7 +20,7 @@
   --text:#e9f6ee; --muted:#8fb0a0; --danger:#f87171;
   --glass:rgba(255,255,255,.04); --glass2:rgba(255,255,255,.07);
   --line2:rgba(255,255,255,.10);
-  --radius:18px; --shadow:0 18px 44px rgba(0,0,0,.5); --glow:0 0 22px rgba(34,197,94,.3);
+  --radius:20px; --shadow:0 18px 44px rgba(0,0,0,.5); --glow:0 0 22px rgba(34,197,94,.3);
   --grad:linear-gradient(135deg,var(--lime),var(--green));
   --grad-soft:linear-gradient(135deg,rgba(163,230,53,.16),rgba(34,197,94,.16));
 }
@@ -244,17 +244,22 @@ body.coach-open #restDock{display:none}
 .wn-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:6px}
 
 /* ========== نقشه حرارتی عضلات ========== */
-.mus-wrap{background:linear-gradient(160deg,var(--card),var(--panel));border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow)}
+.mus-wrap{background:var(--glass);border:1px solid var(--line2);border-radius:24px;padding:18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 18px 44px rgba(0,0,0,.5);backdrop-filter:blur(12px);position:relative;overflow:hidden}
+.mus-wrap::before{content:"";position:absolute;inset:0;border-radius:24px;padding:1px;background:linear-gradient(135deg,rgba(163,230,53,.55),rgba(34,197,94,.18),transparent 60%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:.65}
 .mus-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
 .mus-legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.7rem;color:var(--muted)}
-.mus-legend i{width:10px;height:10px;border-radius:50%;display:inline-block;margin-inline-end:4px;vertical-align:middle}
+.mus-legend i{width:11px;height:11px;border-radius:50%;display:inline-block;margin-inline-end:4px;vertical-align:middle;box-shadow:0 0 7px rgba(255,255,255,.18)}
 .mus-sum{display:flex;gap:8px;flex-wrap:wrap}
 .mus-sum span{font-size:.7rem;border:1px solid var(--line);border-radius:999px;padding:2px 10px;color:var(--muted)}
 .mus-figs{display:flex;justify-content:center;gap:10px}
 .mus-figs svg{width:min(46%,230px);height:auto}
-.mus .sil{fill:#0d1a14;stroke:var(--line);stroke-width:1}
-.mus [data-m]{stroke:#071009;stroke-width:1;cursor:pointer;transition:fill .45s,opacity .45s}
-.mus [data-m]:hover{stroke:var(--lime);stroke-width:1.6}
+.mus .sil{fill:url(#mgSil);stroke:var(--line2);stroke-width:1.3;filter:drop-shadow(0 6px 14px rgba(0,0,0,.45))}
+.mus [data-m]{stroke:rgba(7,16,9,.6);stroke-width:1;cursor:pointer;transition:fill .45s,opacity .45s,filter .3s;filter:drop-shadow(0 0 5px rgba(0,0,0,.35))}
+.mus [data-m]:hover{stroke:var(--lime);stroke-width:1.8;filter:drop-shadow(0 0 10px rgba(163,230,53,.85))}
+.mus [data-m].tired{animation:musPulseRed 1.5s ease-in-out infinite}
+.mus [data-m].rec{animation:musPulseAmber 2.1s ease-in-out infinite}
+@keyframes musPulseRed{0%,100%{filter:drop-shadow(0 0 4px rgba(239,68,68,.45))}50%{filter:drop-shadow(0 0 13px rgba(239,68,68,.95))}}
+@keyframes musPulseAmber{0%,100%{filter:drop-shadow(0 0 4px rgba(251,191,36,.45))}50%{filter:drop-shadow(0 0 13px rgba(251,191,36,.95))}}
 .mus .sk{fill:none;stroke:#16281f;stroke-width:1.4;pointer-events:none}
 .mus-label{fill:var(--muted);font-size:11px;text-anchor:middle}
 #musInfo{margin-top:10px;text-align:center;font-size:.8rem;color:var(--muted);min-height:24px}
@@ -358,11 +363,24 @@ footer b{color:var(--green2)}
   .aurora{animation:none}
   .stat,.week-card,.mus-wrap,.plan,.btn.primary{animation:none}
 }
+/* ========== v13: شیشه‌ای ترند سال ========== */
+.stat,.week-card,.day-panel,.plan{backdrop-filter:blur(12px);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 18px 44px rgba(0,0,0,.5)}
+.day-panel{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 20px 50px rgba(0,0,0,.55),0 0 0 1px rgba(34,197,94,.12)}
+.wn,.coach-card{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 24px 70px rgba(0,0,0,.65),0 0 0 1px rgba(34,197,94,.18)}
+.mus-sum span{background:var(--glass);border-color:var(--line2);backdrop-filter:blur(6px)}
 </style>
 </head>
 <body>
 
 <div class="aurora" aria-hidden="true"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="mgReady" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a3e635"/><stop offset="1" stop-color="#22c55e"/></linearGradient>
+  <linearGradient id="mgSoon" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#bef264"/><stop offset="1" stop-color="#a3e635"/></linearGradient>
+  <linearGradient id="mgRec" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbbf24"/><stop offset="1" stop-color="#f59e0b"/></linearGradient>
+  <linearGradient id="mgTired" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ef4444"/><stop offset="1" stop-color="#dc2626"/></linearGradient>
+  <linearGradient id="mgNone" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b2e24"/><stop offset="1" stop-color="#0d1a14"/></linearGradient>
+  <linearGradient id="mgSil" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16281f"/><stop offset="1" stop-color="#0b1510"/></linearGradient>
+</defs></svg>
 
 <!-- ================= سربرگ ================= -->
 <header>
@@ -515,7 +533,7 @@ footer b{color:var(--green2)}
 
 <footer>
   <button class="btn" id="whatsNewBtn" type="button" style="margin-bottom:10px">📣 تازه‌ها و بروزرسانی‌ها</button><br>
-  <b>GYM PRO</b> نسخه ۱۲ · PWA آفلاین — پرسشنامه، برنامه و پیشرفت فقط در مرورگر همین دستگاه (localStorage) نگه‌داشته می‌شوند. قابل نصب با دکمۀ «📲 نصب اپ».
+  <b>GYM PRO</b> نسخه ۱۳ · PWA آفلاین — پرسشنامه، برنامه و پیشرفت فقط در مرورگر همین دستگاه (localStorage) نگه‌داشته می‌شوند. قابل نصب با دکمۀ «📲 نصب اپ».
 </footer>
 
 <!-- ================= دستیار گام‌به‌گام (کوچ) ================= -->
@@ -1284,11 +1302,17 @@ function agoTxt(ts){
   return dd===1 ? "دیروز" : fa(dd)+" روز پیش";
 }
 function renderMuscles(){
+  const GRAD={ready:"mgReady",soon:"mgSoon",rec:"mgRec",tired:"mgTired",none:"mgNone"};
   document.querySelectorAll("[data-m]").forEach(el=>{
     const st = musStatus(el.dataset.m);
-    el.setAttribute("fill", st.c);
-    el.style.filter  = st.k==="ready" ? "drop-shadow(0 0 5px rgba(34,197,94,.7))" : "";
-    el.style.opacity = st.k==="none" ? ".55" : "1";
+    el.setAttribute("fill", `url(#${GRAD[st.k]})`);
+    el.classList.toggle("tired", st.k==="tired");
+    el.classList.toggle("rec", st.k==="rec");
+    el.style.filter = (st.k==="ready"||st.k==="soon")
+      ? "drop-shadow(0 0 6px rgba(34,197,94,.7))"
+      : (st.k==="rec" ? "drop-shadow(0 0 6px rgba(251,191,36,.6))"
+                    : (st.k==="tired" ? "drop-shadow(0 0 6px rgba(239,68,68,.6))" : ""));
+    el.style.opacity = st.k==="none" ? ".5" : "1";
   });
   const gs = Object.keys(MUSCLES);
   const ready = gs.filter(g=>["ready","soon"].includes(musStatus(g).k)).length;
@@ -1526,8 +1550,13 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){
 
 /* ================= ۱۶) پنجره تازه‌ها (What's New) ================= */
 const LS_SEEN = "gympro.seen.v1";
-const APP_VERSION = 12;
+const APP_VERSION = 13;
 const CHANGELOG = [
+  {v:13, date:"۱۴۰۵/۰۶/۱۲", title:"نقشه عضلات مدرن + شیشه‌ای ترند", items:[
+    "نقشه عضلات: پرشدگی گرادیان (آماده=لیمو→سبز، ریکاوری=کهربا، خسته=قرمز) + درخشش و پالس",
+    "سیلاً بدن شیشه‌ای با سایه نرم + حاشیه گرادیان ماسک‌شده",
+    "شیشه‌ای‌سازی سراسری کارت‌ها (blur قوی‌تر + سایه نئو‑گلس) و شعاع گردتر",
+  ]},
   {v:12, date:"۱۴۰۵/۰۶/۱۲", title:"رفع باگ روز + مدرن‌سازی تب‌های هفته", items:[
     "رفع باگ: تشخیص اشتباه روز هفته (جمعه به‌جای شنبه) با شیفت صحیح getDay",
     "تب‌های روز شیشه‌ای با زیرنویس نوع تمرین + نوار پیشرفت هر روز",

@@ -32,7 +32,8 @@ setTimeout(() => {
 
   // ---- نقشه عضلات ----
   out.musEls = d.querySelectorAll("[data-m]").length;
-  out.musFilled = [...d.querySelectorAll("[data-m]")].every(el => /#[0-9a-f]{6}/i.test(el.getAttribute("fill") || ""));
+  const isFilled = f => /^url\(#mg/i.test(f||"") || /#[0-9a-f]{6}/i.test(f||"");
+  out.musFilled = [...d.querySelectorAll("[data-m]")].every(el => isFilled(el.getAttribute("fill")));
   out.musSum = d.getElementById("musSum").textContent;
 
   // برو به اولین روز تمرینی
