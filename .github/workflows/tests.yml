@@ -1,0 +1,53 @@
+name: tests
+
+# The regression suite is five files, one per major version, and each one drives
+# the real wizard flow in jsdom. They already exit non-zero when the window
+# throws (2 for runtime errors, 3 for a harness failure), so the only thing
+# missing was someone running them on every push.
+#
+# jsdom is installed with --no-save: the app itself ships no dependencies and
+# must keep working from a bare index.html.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install --no-save --no-fund --no-audit jsdom@30
+
+      - name: run every regression test
+        run: |
+          set -e
+          shopt -s nullglob
+          n=0
+          for f in tests/*.js; do
+            printf '\n──── %s\n' "$f"
+            node "$f"
+            n=$((n + 1))
+          done
+          printf '\n%s regression files passed.\n' "$n"
+
+      - name: the app must stay a single self-contained file
+        run: |
+          set -e
+          # The whole point of GYM PRO is that index.html works offline with no
+          # build step, so a stray dependency on a local script or a CDN breaks
+          # the promise rather than just the layout.
+          if grep -nE '<script[^>]+src="\./|<script[^>]+src="[^"]*\.js"' index.html; then
+            echo "::error::index.html now loads an external local script; the single-file promise is broken."
+            exit 1
+          fi
+          echo "index.html is still self-contained."
